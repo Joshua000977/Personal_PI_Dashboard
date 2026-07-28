@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-
 function useTouchScroll(scrollContainerRef) {
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -17,7 +16,7 @@ function useTouchScroll(scrollContainerRef) {
     let suppressClickTimer = null;
 
     function handlePointerDown(event) {
-      if (event.pointerType !== "touch" || !event.isPrimary) {
+      if (!event.isPrimary) {
         return;
       }
 
@@ -38,8 +37,7 @@ function useTouchScroll(scrollContainerRef) {
         hasMoved = true;
       }
 
-      scrollContainer.scrollTop =
-        startScrollTop + movedDistance;
+      scrollContainer.scrollTop = startScrollTop + movedDistance;
 
       if (event.cancelable) {
         event.preventDefault();
@@ -74,64 +72,32 @@ function useTouchScroll(scrollContainerRef) {
       suppressClick = false;
     }
 
-    scrollContainer.addEventListener(
-      "pointerdown",
-      handlePointerDown,
-    );
+    scrollContainer.addEventListener("pointerdown", handlePointerDown);
 
-    window.addEventListener(
-      "pointermove",
-      handlePointerMove,
-      { passive: false },
-    );
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: false,
+    });
 
-    window.addEventListener(
-      "pointerup",
-      handlePointerEnd,
-    );
+    window.addEventListener("pointerup", handlePointerEnd);
 
-    window.addEventListener(
-      "pointercancel",
-      handlePointerEnd,
-    );
+    window.addEventListener("pointercancel", handlePointerEnd);
 
-    scrollContainer.addEventListener(
-      "click",
-      handleClick,
-      true,
-    );
+    scrollContainer.addEventListener("click", handleClick, true);
 
     return () => {
-      scrollContainer.removeEventListener(
-        "pointerdown",
-        handlePointerDown,
-      );
+      scrollContainer.removeEventListener("pointerdown", handlePointerDown);
 
-      window.removeEventListener(
-        "pointermove",
-        handlePointerMove,
-      );
+      window.removeEventListener("pointermove", handlePointerMove);
 
-      window.removeEventListener(
-        "pointerup",
-        handlePointerEnd,
-      );
+      window.removeEventListener("pointerup", handlePointerEnd);
 
-      window.removeEventListener(
-        "pointercancel",
-        handlePointerEnd,
-      );
+      window.removeEventListener("pointercancel", handlePointerEnd);
 
-      scrollContainer.removeEventListener(
-        "click",
-        handleClick,
-        true,
-      );
+      scrollContainer.removeEventListener("click", handleClick, true);
 
       window.clearTimeout(suppressClickTimer);
     };
   }, [scrollContainerRef]);
 }
-
 
 export default useTouchScroll;
