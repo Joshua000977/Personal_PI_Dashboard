@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import StatCard from "../components/StatCard";
+import SystemStats from "../components/SystemStats";
+import useSystemData from "../hooks/useSystemData";
 import "./DashboardPage.css";
-
-const API_URL = "http://localhost:8000/api/system";
 
 const quickActions = [
   { title: "Restart Pi", icon: "↻" },
@@ -31,8 +30,11 @@ const activity = [
 ];
 
 function DashboardPage() {
-  const [systemData, setSystemData] = useState(null);
-  const [backendOnline, setBackendOnline] = useState(false);
+  const {
+    systemData,
+    backendOnline,
+  } = useSystemData();
+
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -42,89 +44,6 @@ function DashboardPage() {
 
     return () => window.clearInterval(clockInterval);
   }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadSystemData = async () => {
-      try {
-        const response = await fetch(API_URL);
-
-        if (!response.ok) {
-          throw new Error(`Backend returned ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!cancelled) {
-          setSystemData(data);
-          setBackendOnline(true);
-        }
-      } catch (error) {
-        console.error("Could not load system information:", error);
-
-        if (!cancelled) {
-          setBackendOnline(false);
-        }
-      }
-    };
-
-    loadSystemData();
-    const dataInterval = window.setInterval(loadSystemData, 3000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(dataInterval);
-    };
-  }, []);
-
-  const systemCards = useMemo(() => {
-    const temperature = systemData?.cpu.temperature_celsius;
-
-    return [
-      {
-        title: "CPU Usage",
-        value: systemData
-          ? `${systemData.cpu.usage_percent.toFixed(0)}%`
-          : "--%",
-        detail: systemData
-          ? `${systemData.cpu.cores} logical cores`
-          : "Loading system data",
-        icon: "CPU",
-        progress: systemData?.cpu.usage_percent ?? 0,
-      },
-      {
-        title: "Memory",
-        value: systemData ? `${systemData.memory.used_gb} GB` : "-- GB",
-        detail: systemData
-          ? `of ${systemData.memory.total_gb} GB used`
-          : "Loading system data",
-        icon: "RAM",
-        progress: systemData?.memory.usage_percent ?? 0,
-      },
-      {
-        title: "Temperature",
-        value: temperature == null ? "--°C" : `${temperature}°C`,
-        detail:
-          temperature == null
-            ? "Loading temperature"
-            : temperature < 70
-              ? "System temperature normal"
-              : "System temperature high",
-        icon: "TEMP",
-        progress: temperature ?? 0,
-      },
-      {
-        title: "Storage",
-        value: systemData ? `${systemData.storage.used_gb} GB` : "-- GB",
-        detail: systemData
-          ? `of ${systemData.storage.total_gb} GB used`
-          : "Loading system data",
-        icon: "SSD",
-        progress: systemData?.storage.usage_percent ?? 0,
-      },
-    ];
-  }, [systemData]);
 
   const formattedTime = currentTime.toLocaleTimeString("en-GB", {
     hour: "2-digit",
@@ -180,11 +99,7 @@ function DashboardPage() {
         </div>
       </section>
 
-      <section className="stats-grid">
-        {systemCards.map((card) => (
-          <StatCard key={card.title} {...card} />
-        ))}
-      </section>
+      <SystemStats systemData={systemData} />
 
       <section className="lower-grid">
         <article className="dashboard-card">

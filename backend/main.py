@@ -1,3 +1,4 @@
+import platform
 import socket
 import time
 from pathlib import Path
@@ -22,6 +23,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def get_pi_model() -> str:
+    """Read the Raspberry Pi model name."""
+
+    model_file = Path("/sys/firmware/devicetree/base/model")
+
+    try:
+        return model_file.read_text().strip().replace("\x00", "")
+    except (FileNotFoundError, PermissionError):
+        return "Unknown device"
+    
+def get_operating_system() -> str:
+    """Read the full operating system name."""
+
+    os_release_file = Path("/etc/os-release")
+
+    try:
+        for line in os_release_file.read_text().splitlines():
+            if line.startswith("PRETTY_NAME="):
+                return line.split("=", 1)[1].strip('"')
+    except (FileNotFoundError, PermissionError):
+        pass
+
+    return platform.system()
 
 def get_cpu_temperature() -> float | None:
     """Read the Raspberry Pi CPU temperature."""
@@ -100,4 +124,15 @@ def get_system_information():
             "uptime": format_uptime(uptime_seconds),
             "ip_address": get_ip_address(),
         },
+    }
+@app.get("/api/system/details")
+def get_detailed_system_information():
+    return {
+        "model": get_pi_model(),
+        "hostname": socket.gethostname(),
+        "operating_system": get_operating_system(),
+        "kernel": platform.release(),
+        "architecture": platform.machine(),
+        "physical_cpu_cores": psutil.cpu_count(logical=False),
+        "logical_cpu_cores": psutil.cpu_count(logical=True),
     }

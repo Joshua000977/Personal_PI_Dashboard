@@ -1,0 +1,184 @@
+import { useEffect, useState } from "react";
+
+import SystemStats from "../components/SystemStats";
+import useSystemData from "../hooks/useSystemData";
+import "./SystemPage.css";
+
+
+function SystemPage() {
+  const [systemDetails, setSystemDetails] = useState(null);
+  const [detailsError, setDetailsError] = useState("");
+
+  const {
+    systemData,
+    backendOnline,
+    error: liveError,
+  } = useSystemData();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSystemDetails() {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/system/details",
+        );
+
+        if (!response.ok) {
+          throw new Error("The backend returned an error.");
+        }
+
+        const data = await response.json();
+
+        if (!cancelled) {
+          setSystemDetails(data);
+          setDetailsError("");
+        }
+      } catch (requestError) {
+        if (!cancelled) {
+          setDetailsError(requestError.message);
+        }
+      }
+    }
+
+    loadSystemDetails();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (detailsError) {
+    return (
+      <main className="system-page">
+        <h1>System</h1>
+
+        <p className="system-page__error">
+          {detailsError}
+        </p>
+      </main>
+    );
+  }
+
+  if (!systemDetails) {
+    return (
+      <main className="system-page">
+        <h1>System</h1>
+        <p>Loading system information...</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="system-page">
+      <header className="system-page__header">
+        <p className="system-page__eyebrow">
+          Raspberry Pi
+        </p>
+
+        <h1>System Information</h1>
+
+        <p>
+          Hardware, operating system and live performance
+          information for this Raspberry Pi.
+        </p>
+      </header>
+
+      <section className="system-details">
+        <div className="system-detail">
+          <span>Model</span>
+          <strong>{systemDetails.model}</strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Hostname</span>
+          <strong>{systemDetails.hostname}</strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Operating system</span>
+          <strong>
+            {systemDetails.operating_system}
+          </strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Kernel</span>
+          <strong>{systemDetails.kernel}</strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Architecture</span>
+          <strong>{systemDetails.architecture}</strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Physical CPU cores</span>
+          <strong>
+            {systemDetails.physical_cpu_cores}
+          </strong>
+        </div>
+
+        <div className="system-detail">
+          <span>Logical CPU cores</span>
+          <strong>
+            {systemDetails.logical_cpu_cores}
+          </strong>
+        </div>
+      </section>
+
+      <section className="system-live-section">
+        <div className="system-live-section__header">
+          <div>
+            <p className="system-page__eyebrow">
+              Live monitoring
+            </p>
+
+            <h2>Current System Status</h2>
+          </div>
+
+          <span className="system-live-section__refresh">
+            Refreshes every 3 seconds
+          </span>
+        </div>
+
+        {liveError && (
+          <p className="system-page__error">
+            {liveError}
+          </p>
+        )}
+
+        <SystemStats systemData={systemData} />
+
+        <div className="system-runtime-details">
+          <div className="system-detail">
+            <span>Uptime</span>
+
+            <strong>
+              {systemData?.system.uptime ?? "Loading..."}
+            </strong>
+          </div>
+
+          <div className="system-detail">
+            <span>IP address</span>
+
+            <strong>
+              {systemData?.system.ip_address ?? "Loading..."}
+            </strong>
+          </div>
+
+          <div className="system-detail">
+            <span>Backend</span>
+
+            <strong>
+              {backendOnline ? "Online" : "Offline"}
+            </strong>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+
+export default SystemPage;

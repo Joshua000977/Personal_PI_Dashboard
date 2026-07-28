@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import DashboardPage from "./pages/DashboardPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import "./App.css";
+import SystemPage from "./pages/SystemPage";
 
 function App() {
   return (
@@ -18,10 +19,7 @@ function App() {
               path="/applications"
               element={<PlaceholderPage title="Applications" />}
             />
-            <Route
-              path="/system"
-              element={<PlaceholderPage title="System" />}
-            />
+            <Route path="/system" element={<SystemPage />} />
             <Route
               path="/storage"
               element={<PlaceholderPage title="Storage" />}
