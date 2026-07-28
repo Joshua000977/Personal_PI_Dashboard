@@ -38,3 +38,32 @@ textarea {
 a {
   color: inherit;
 }
+
+/* Touchscreen behaviour */
+html,
+body,
+#root {
+  min-height: 100%;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent accidental text selection while swiping */
+body,
+button,
+a,
+.dashboard-page,
+.system-page,
+.stat-card,
+.sidebar {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Text must still be selectable inside future input fields */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}

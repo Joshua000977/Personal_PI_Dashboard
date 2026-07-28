@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useRef } from "react";
 
 import Sidebar from "./components/Sidebar";
 import DashboardPage from "./pages/DashboardPage";
@@ -6,13 +7,18 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import "./App.css";
 import SystemPage from "./pages/SystemPage";
 
+import useTouchScroll from "./hooks/useTouchScroll";
+
 function App() {
+  const pageContentRef = useRef(null);
+
+  useTouchScroll(pageContentRef);
   return (
     <BrowserRouter>
       <div className="app-shell">
         <Sidebar />
 
-        <main className="page-content">
+        <main ref={pageContentRef} className="page-content">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route

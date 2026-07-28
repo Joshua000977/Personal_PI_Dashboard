@@ -7,9 +7,7 @@ import psutil
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI(title="Personal Pi Dashboard API")
-
 
 # Allow the React development server to access the backend.
 app.add_middleware(

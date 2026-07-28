@@ -62,6 +62,9 @@ function DashboardPage() {
         <div>
           <h1>Dashboard</h1>
           <p>Welcome back, Joshua. Everything looks good.</p>
+          <p>
+  Viewport: {window.innerWidth} × {window.innerHeight}
+</p>
         </div>
 
         <div className="dashboard-topbar-right">
