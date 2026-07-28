@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import SystemStats from "../components/SystemStats";
 import useSystemData from "../hooks/useSystemData";
 import "./SystemPage.css";
+import { API_BASE_URL } from "../config";
 
 
 function SystemPage() {
@@ -21,7 +22,7 @@ function SystemPage() {
     async function loadSystemDetails() {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/system/details",
+          `${API_BASE_URL}/api/system/details`,
         );
 
         if (!response.ok) {

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://127.0.0.1:8000/api/system";
+import { API_BASE_URL } from "../config";
+
+const API_URL = `${API_BASE_URL}/api/system`;;
 
 function useSystemData(refreshInterval = 3000) {
   const [systemData, setSystemData] = useState(null);
