@@ -244,3 +244,29 @@ def get_detailed_system_information():
         "physical_cpu_cores": psutil.cpu_count(logical=False),
         "logical_cpu_cores": psutil.cpu_count(logical=True),
     }
+@app.get("/api/storage")
+def get_storage_information():
+    disk = psutil.disk_usage("/")
+    
+    storage_state = "healthy"
+    storage_summary = "Storage usage is normal"
+    
+    if disk.percent >= 90:
+        storage_state = "critical"
+        storage_summary ="Storage is almost full"
+    elif disk.percent >= 75:
+        storage_state ="warning"
+        storage_summary ="Storage space is becoming limited"
+    return{
+        "filesystem":{
+            "mount_point":"/",
+            "total_gb": round(disk.total /(1024**3),1),
+            "used_gb": round(disk.used / (1024**3),1),
+            "free_gb" : round(disk.free /(1024**3),1),
+            "usage_percentage": round(disk.percent,1),
+        },
+        "health":{
+            "state": storage_state,
+            "summary": storage_summary,
+        },
+    }

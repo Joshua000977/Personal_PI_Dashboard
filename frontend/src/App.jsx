@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import "./App.css";
 import SystemPage from "./pages/SystemPage";
+import StoragePage from "./pages/StoragePage";
 
 import useTouchScroll from "./hooks/useTouchScroll";
 
@@ -28,7 +29,7 @@ function App() {
             <Route path="/system" element={<SystemPage />} />
             <Route
               path="/storage"
-              element={<PlaceholderPage title="Storage" />}
+              element={<StoragePage />}
             />
             <Route
               path="/settings"
