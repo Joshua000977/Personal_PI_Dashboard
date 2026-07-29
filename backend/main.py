@@ -3,6 +3,7 @@ import socket
 import subprocess
 import time
 from pathlib import Path
+from urllib import error, request
 
 import psutil
 from fastapi import FastAPI
@@ -195,6 +196,47 @@ def format_uptime(seconds: int) -> str:
 
     return f"{minutes}m"
 
+def is_http_service_online(url:str) -> bool:
+    """Return True when an HTTP service responds"""
+    try:
+        with request.urlopen(url, timeout=1):
+            return True
+    except(
+        error.URLError,
+        TimeoutError,
+        ConnectionError,
+    ): 
+        return False
+def is_process_running(search_text: str) -> bool:
+    """Check whether a running process contains specific text."""
+
+    search_text = search_text.lower()
+
+    for process in psutil.process_iter(
+        ["name", "cmdline"],
+    ):
+        try:
+            process_name = (
+                process.info["name"] or ""
+            ).lower()
+
+            command_line = " ".join(
+                process.info["cmdline"] or [],
+            ).lower()
+
+            if (
+                search_text in process_name
+                or search_text in command_line
+            ):
+                return True
+        except (
+            psutil.NoSuchProcess,
+            psutil.AccessDenied,
+        ):
+            continue
+
+    return False
+
 
 @app.get("/")
 def read_root():
@@ -268,5 +310,68 @@ def get_storage_information():
         "health":{
             "state": storage_state,
             "summary": storage_summary,
+        },
+    }
+    
+@app.get("/api/applications")
+def get_application_statuses():
+    frontend_online = is_http_service_online(
+        "http://127.0.0.1:5173"
+    )
+    chromium_online = is_process_running("chromium")
+    return {
+        "applications": [
+            {
+                "id": "backend",
+                "name": "Dashboard Backend",
+                "description": (
+                    "FastAPI service providing system data "
+                    "to the dashboard."
+                ),
+                "status": "online",
+                "online": True,
+                "type": "FastAPI",
+                "port": 8000,
+            },
+            {
+                "id": "frontend",
+                "name": "Dashboard Frontend",
+                "description": (
+                    "React interface displayed on the "
+                    "Raspberry Pi touchscreen."
+                ),
+                "status": (
+                    "online"
+                    if frontend_online
+                    else "offline"
+                ),
+                "online": frontend_online,
+                "type": "React / Vite",
+                "port": 5173,
+            },
+            {
+                "id": "chromium",
+                "name": "Chromium Kiosk",
+                "description": (
+                    "Fullscreen browser displaying the "
+                    "Personal Pi Dashboard."
+                ),
+                "status": (
+                    "online"
+                    if chromium_online
+                    else "offline"
+                ),
+                "online": chromium_online,
+                "type": "Chromium",
+                "port": None,
+            },
+        ],
+        "summary": {
+            "online_count": (
+                1
+                + int(frontend_online)
+                + int(chromium_online)
+            ),
+            "total_count": 3,
         },
     }

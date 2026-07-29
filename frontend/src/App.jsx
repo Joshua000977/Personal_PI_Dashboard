@@ -9,6 +9,7 @@ import SystemPage from "./pages/SystemPage";
 import StoragePage from "./pages/StoragePage";
 
 import useTouchScroll from "./hooks/useTouchScroll";
+import ApplicationsPage from "./pages/ApplicationsPage";
 
 function App() {
   const pageContentRef = useRef(null);
@@ -24,7 +25,7 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route
               path="/applications"
-              element={<PlaceholderPage title="Applications" />}
+              element={<ApplicationsPage />}
             />
             <Route path="/system" element={<SystemPage />} />
             <Route
