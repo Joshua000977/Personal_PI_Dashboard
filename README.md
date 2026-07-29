@@ -18,29 +18,6 @@ The long-term goal is to build a personal command center that can be expanded pr
 
 ---
 
-# Project Status
-
-```text
-Planning / Initial Development
-```
-
-The project will be built progressively.
-
-The first version will focus on:
-
-- Raspberry Pi setup
-- Docker environment
-- React frontend
-- Python FastAPI backend
-- basic dashboard navigation
-- weather information
-- Raspberry Pi system monitoring
-- fullscreen touchscreen interface
-
-Additional modules will be added later.
-
----
-
 # Main Goals
 
 The main goals of the project are:
