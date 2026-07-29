@@ -189,12 +189,6 @@ function StoragePage() {
               }}
             />
           </div>
-
-          <div className="storage-health__limits">
-            <span>Healthy below 75%</span>
-            <span>Warning from 75%</span>
-            <span>Critical from 90%</span>
-          </div>
         </div>
       </section>
 

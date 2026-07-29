@@ -263,7 +263,7 @@ def get_storage_information():
             "total_gb": round(disk.total /(1024**3),1),
             "used_gb": round(disk.used / (1024**3),1),
             "free_gb" : round(disk.free /(1024**3),1),
-            "usage_percentage": round(disk.percent,1),
+            "usage_percent": round(disk.percent,1),
         },
         "health":{
             "state": storage_state,
