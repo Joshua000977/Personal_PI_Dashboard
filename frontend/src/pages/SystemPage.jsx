@@ -5,25 +5,31 @@ import useSystemData from "../hooks/useSystemData";
 import "./SystemPage.css";
 import { API_BASE_URL } from "../config";
 
-
 function SystemPage() {
   const [systemDetails, setSystemDetails] = useState(null);
   const [detailsError, setDetailsError] = useState("");
 
-  const {
-    systemData,
-    backendOnline,
-    error: liveError,
-  } = useSystemData();
+  const { systemData, backendOnline, error: liveError } = useSystemData();
+
+  const health = systemData?.health;
+
+  const currentPerformanceWarning =
+    health?.frequency_capped_now ||
+    health?.throttled_now ||
+    health?.soft_temperature_limit_now;
+
+  const previousWarning =
+    health?.undervoltage_occurred ||
+    health?.frequency_capped_occurred ||
+    health?.throttling_occurred ||
+    health?.soft_temperature_limit_occurred;
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadSystemDetails() {
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/system/details`,
-        );
+        const response = await fetch(`${API_BASE_URL}/api/system/details`);
 
         if (!response.ok) {
           throw new Error("The backend returned an error.");
@@ -54,9 +60,7 @@ function SystemPage() {
       <main className="system-page">
         <h1>System</h1>
 
-        <p className="system-page__error">
-          {detailsError}
-        </p>
+        <p className="system-page__error">{detailsError}</p>
       </main>
     );
   }
@@ -73,15 +77,13 @@ function SystemPage() {
   return (
     <main className="system-page">
       <header className="system-page__header">
-        <p className="system-page__eyebrow">
-          Raspberry Pi
-        </p>
+        <p className="system-page__eyebrow">Raspberry Pi</p>
 
         <h1>System Information</h1>
 
         <p>
-          Hardware, operating system and live performance
-          information for this Raspberry Pi.
+          Hardware, operating system and live performance information for this
+          Raspberry Pi.
         </p>
       </header>
 
@@ -98,9 +100,7 @@ function SystemPage() {
 
         <div className="system-detail">
           <span>Operating system</span>
-          <strong>
-            {systemDetails.operating_system}
-          </strong>
+          <strong>{systemDetails.operating_system}</strong>
         </div>
 
         <div className="system-detail">
@@ -115,25 +115,19 @@ function SystemPage() {
 
         <div className="system-detail">
           <span>Physical CPU cores</span>
-          <strong>
-            {systemDetails.physical_cpu_cores}
-          </strong>
+          <strong>{systemDetails.physical_cpu_cores}</strong>
         </div>
 
         <div className="system-detail">
           <span>Logical CPU cores</span>
-          <strong>
-            {systemDetails.logical_cpu_cores}
-          </strong>
+          <strong>{systemDetails.logical_cpu_cores}</strong>
         </div>
       </section>
 
       <section className="system-live-section">
         <div className="system-live-section__header">
           <div>
-            <p className="system-page__eyebrow">
-              Live monitoring
-            </p>
+            <p className="system-page__eyebrow">Live monitoring</p>
 
             <h2>Current System Status</h2>
           </div>
@@ -143,11 +137,7 @@ function SystemPage() {
           </span>
         </div>
 
-        {liveError && (
-          <p className="system-page__error">
-            {liveError}
-          </p>
-        )}
+        {liveError && <p className="system-page__error">{liveError}</p>}
 
         <SystemStats systemData={systemData} />
 
@@ -155,31 +145,101 @@ function SystemPage() {
           <div className="system-detail">
             <span>Uptime</span>
 
-            <strong>
-              {systemData?.system.uptime ?? "Loading..."}
-            </strong>
+            <strong>{systemData?.system.uptime ?? "Loading..."}</strong>
           </div>
 
           <div className="system-detail">
             <span>IP address</span>
 
-            <strong>
-              {systemData?.system.ip_address ?? "Loading..."}
-            </strong>
+            <strong>{systemData?.system.ip_address ?? "Loading..."}</strong>
           </div>
 
           <div className="system-detail">
             <span>Backend</span>
 
-            <strong>
-              {backendOnline ? "Online" : "Offline"}
-            </strong>
+            <strong>{backendOnline ? "Online" : "Offline"}</strong>
+          </div>
+        </div>
+        <div
+          className={`system-health-panel system-health-panel--${
+            health?.state ?? "unknown"
+          }`}
+        >
+          <div className="system-health-panel__header">
+            <div>
+              <span className="system-health-panel__label">
+                Raspberry Pi health
+              </span>
+
+              <strong>
+                {health?.summary ?? "Loading health information..."}
+              </strong>
+            </div>
+
+            <span className="system-health-panel__state">
+              {health?.state ?? "unknown"}
+            </span>
+          </div>
+
+          <div className="system-health-grid">
+            <div
+              className={`system-health-item ${
+                health?.undervoltage_now ? "system-health-item--warning" : ""
+              }`}
+            >
+              <span>Power supply</span>
+
+              <strong>
+                {!health
+                  ? "Loading..."
+                  : health.undervoltage_now
+                  ? "Undervoltage"
+                  : "Normal"}
+              </strong>
+            </div>
+
+            <div
+              className={`system-health-item ${
+                currentPerformanceWarning ? "system-health-item--warning" : ""
+              }`}
+            >
+              <span>Performance</span>
+
+              <strong>
+                {!health
+                  ? "Loading..."
+                  : currentPerformanceWarning
+                  ? "Limited"
+                  : "Normal"}
+              </strong>
+            </div>
+
+            <div
+              className={`system-health-item ${
+                previousWarning ? "system-health-item--history" : ""
+              }`}
+            >
+              <span>Since boot</span>
+
+              <strong>
+                {!health
+                  ? "Loading..."
+                  : previousWarning
+                  ? "Warning recorded"
+                  : "No warnings"}
+              </strong>
+            </div>
+
+            <div className="system-health-item">
+              <span>Raw status</span>
+
+              <strong>{health?.raw_value ?? "--"}</strong>
+            </div>
           </div>
         </div>
       </section>
     </main>
   );
 }
-
 
 export default SystemPage;

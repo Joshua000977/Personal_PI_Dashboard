@@ -88,6 +88,100 @@
   margin-top: 16px;
 }
 
+.system-health-panel {
+  margin-top: 16px;
+  padding: 20px;
+  border: 1px solid rgba(183, 156, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(77, 48, 122, 0.16);
+}
+
+.system-health-panel--healthy {
+  border-color: rgba(89, 220, 145, 0.35);
+  background: rgba(32, 112, 70, 0.14);
+}
+
+.system-health-panel--history {
+  border-color: rgba(255, 193, 87, 0.38);
+  background: rgba(130, 88, 22, 0.15);
+}
+
+.system-health-panel--warning {
+  border-color: rgba(255, 100, 120, 0.45);
+  background: rgba(140, 35, 55, 0.17);
+}
+
+.system-health-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.system-health-panel__header strong {
+  display: block;
+  margin-top: 6px;
+  color: #f5f2ff;
+  font-size: 1.05rem;
+}
+
+.system-health-panel__label {
+  color: #aaa4be;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.system-health-panel__state {
+  padding: 8px 12px;
+  border: 1px solid rgba(183, 156, 255, 0.25);
+  border-radius: 999px;
+  color: #d8cbff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.system-health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.system-health-item {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(183, 156, 255, 0.14);
+  border-radius: 13px;
+  background: rgba(9, 11, 19, 0.28);
+}
+
+.system-health-item span {
+  display: block;
+  margin-bottom: 8px;
+  color: #aaa4be;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+
+.system-health-item strong {
+  display: block;
+  color: #f5f2ff;
+  overflow-wrap: anywhere;
+}
+
+.system-health-item--warning {
+  border-color: rgba(255, 100, 120, 0.45);
+  background: rgba(140, 35, 55, 0.18);
+}
+
+.system-health-item--history {
+  border-color: rgba(255, 193, 87, 0.4);
+  background: rgba(130, 88, 22, 0.17);
+}
+
 @media (max-width: 900px) {
   .system-details {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -108,6 +202,14 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 8px;
+  }
+  .system-health-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .system-health-panel__header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 /* Raspberry Pi 7-inch landscape display */
@@ -177,5 +279,20 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
     margin-top: 14px;
+  }
+
+  .system-health-panel {
+    margin-top: 14px;
+    padding: 18px;
+  }
+  
+  .system-health-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  
+  .system-health-item {
+    padding: 13px;
   }
 }
