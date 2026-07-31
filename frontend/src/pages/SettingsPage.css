@@ -275,4 +275,32 @@
       min-height: 68px;
       padding: 13px 15px;
     }
+    
+  }
+  .setting-text-input {
+    width: min(280px, 100%);
+    min-height: 42px;
+    padding: 0 13px;
+  
+    border: 1px solid rgba(183, 156, 255, 0.3);
+    border-radius: 12px;
+  
+    color: #f3efff;
+    background: rgba(41, 25, 70, 0.9);
+  
+    font: inherit;
+    font-size: 0.86rem;
+  }
+  
+  .setting-text-input:focus-visible {
+    border-color: rgba(190, 150, 255, 0.75);
+  
+    outline: 3px solid rgba(183, 156, 255, 0.22);
+    outline-offset: 2px;
+  }
+  
+  @media (max-width: 700px) {
+    .setting-text-input {
+      width: 100%;
+    }
   }

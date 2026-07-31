@@ -14,6 +14,9 @@ import {
     systemRefreshInterval: 3000,
     storageRefreshInterval: 5000,
     temperatureWarningLimit: 70,
+    weatherLocationMode: "manual",
+    weatherLocationName:
+      "Straßburg, Kärnten, AT",
   };
   
   

@@ -11,7 +11,7 @@ import ApplicationsPage from "./pages/ApplicationsPage";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 import useTouchScroll from "./hooks/useTouchScroll";
-
+import WeatherPage from "./pages/WeatherPage";
 
 function App() {
   const pageContentRef = useRef(null);
@@ -26,16 +26,14 @@ function App() {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/applications" element={<ApplicationsPage />} />
+            <Route path="/applications/weather" element={<WeatherPage />} />
             <Route
               path="/applications/:applicationId"
               element={<ApplicationDetailPage />}
             />
             <Route path="/system" element={<SystemPage />} />
             <Route path="/storage" element={<StoragePage />} />
-            <Route
-              path="/settings"
-              element={<SettingsPage />}
-            />
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </main>
       </div>
