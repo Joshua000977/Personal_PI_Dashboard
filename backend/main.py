@@ -266,29 +266,40 @@ def geocode_location(location_name: str) -> dict:
         "timezone": best_match.get("timezone"),
         "requested_location": cleaned_location,
     }
-
 def fetch_current_weather(location_name: str) -> dict:
-    """Fetch current weather for a named location."""
-
     location = geocode_location(location_name)
 
+    query_data = {
+        "latitude": location["latitude"],
+        "longitude": location["longitude"],
+
+        "current": ",".join([
+            "temperature_2m",
+            "apparent_temperature",
+            "relative_humidity_2m",
+            "weather_code",
+            "wind_speed_10m",
+            "precipitation",
+            "is_day",
+        ]),
+
+        "daily": ",".join([
+            "weather_code",
+            "temperature_2m_max",
+            "temperature_2m_min",
+            "precipitation_probability_max",
+            "precipitation_sum",
+            "wind_speed_10m_max",
+            "sunrise",
+            "sunset",
+        ]),
+
+        "timezone": "auto",
+        "forecast_days": 8,
+    }
+
     query_parameters = parse.urlencode(
-        {
-            "latitude": location["latitude"],
-            "longitude": location["longitude"],
-            "current": ",".join(
-                [
-                    "temperature_2m",
-                    "apparent_temperature",
-                    "relative_humidity_2m",
-                    "weather_code",
-                    "wind_speed_10m",
-                    "precipitation",
-                    "is_day",
-                ]
-            ),
-            "timezone": "auto",
-        }
+        query_data,
     )
 
     weather_url = (
@@ -301,38 +312,137 @@ def fetch_current_weather(location_name: str) -> dict:
         "Weather service",
     )
 
-    current = weather_data.get("current")
+    current = weather_data.get(
+        "current",
+        {},
+    )
 
-    if not current:
-        raise HTTPException(
-            status_code=502,
-            detail="Weather service returned no current data",
+    daily = weather_data.get(
+        "daily",
+        {},
+    )
+
+    forecast_dates = daily.get(
+        "time",
+        [],
+    )
+
+    def get_daily_value(
+        property_name: str,
+        index: int,
+    ):
+        values = daily.get(
+            property_name,
+            [],
         )
 
+        if index >= len(values):
+            return None
+
+        return values[index]
+
+    forecast = []
+
+    for index, forecast_date in enumerate(
+        forecast_dates
+    ):
+        forecast.append({
+            "date": forecast_date,
+
+            "weather_code": get_daily_value(
+                "weather_code",
+                index,
+            ),
+
+            "maximum_temperature_celsius":
+                get_daily_value(
+                    "temperature_2m_max",
+                    index,
+                ),
+
+            "minimum_temperature_celsius":
+                get_daily_value(
+                    "temperature_2m_min",
+                    index,
+                ),
+
+            "precipitation_probability_percent":
+                get_daily_value(
+                    "precipitation_probability_max",
+                    index,
+                ),
+
+            "precipitation_mm": get_daily_value(
+                "precipitation_sum",
+                index,
+            ),
+
+            "maximum_wind_speed_kmh":
+                get_daily_value(
+                    "wind_speed_10m_max",
+                    index,
+                ),
+
+            "sunrise": get_daily_value(
+                "sunrise",
+                index,
+            ),
+
+            "sunset": get_daily_value(
+                "sunset",
+                index,
+            ),
+        })
+
     return {
-        "location": location,
+        "location": {
+            "name": location.get("name"),
+            "region": location.get("region"),
+            "country": location.get("country"),
+            "country_code": location.get(
+                "country_code"
+            ),
+            "latitude": location.get("latitude"),
+            "longitude": location.get("longitude"),
+            "timezone": weather_data.get(
+                "timezone"
+            ),
+        },
+
         "current": {
             "time": current.get("time"),
+
             "temperature_celsius": current.get(
                 "temperature_2m"
             ),
-            "apparent_temperature_celsius": current.get(
-                "apparent_temperature"
-            ),
+
+            "apparent_temperature_celsius":
+                current.get(
+                    "apparent_temperature"
+                ),
+
             "humidity_percent": current.get(
                 "relative_humidity_2m"
             ),
+
             "weather_code": current.get(
                 "weather_code"
             ),
+
             "wind_speed_kmh": current.get(
                 "wind_speed_10m"
             ),
+
             "precipitation_mm": current.get(
                 "precipitation"
             ),
-            "is_day": current.get("is_day"),
+
+            "is_day": current.get(
+                "is_day"
+            ),
         },
+
+        "forecast": forecast,
     }
         
 def run_power_command(command: str) -> None:

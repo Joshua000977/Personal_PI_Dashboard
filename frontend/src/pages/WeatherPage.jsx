@@ -3,12 +3,25 @@ import { Link } from "react-router-dom";
 import useWeatherData from "../hooks/useWeatherData";
 import "./WeatherPage.css";
 
+function formatForecastDate(dateString) {
+  const date = new Date(`${dateString}T12:00:00`);
+
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+  }).format(date);
+}
+function formatTime(dateTimeString) {
+  if (!dateTimeString) {
+    return "--:--";
+  }
+
+  return dateTimeString.split("T")[1].slice(0, 5);
+}
+
 function WeatherPage() {
-  const {
-    weatherData,
-    weatherLoading,
-    weatherError,
-  } = useWeatherData();
+  const { weatherData, weatherLoading, weatherError } = useWeatherData();
 
   if (weatherLoading) {
     return (
@@ -21,9 +34,7 @@ function WeatherPage() {
   if (weatherError) {
     return (
       <main className="weather-page">
-        <Link to="/applications">
-          ← Back to applications
-        </Link>
+        <Link to="/applications">← Back to applications</Link>
 
         <h1>Weather unavailable</h1>
         <p>{weatherError}</p>
@@ -34,44 +45,126 @@ function WeatherPage() {
   const location = weatherData?.location;
   const current = weatherData?.current;
 
+  const forecast = (weatherData?.forecast ?? []).slice(1, 8);
+
+  const forecastT = weatherData?.forecast ?? [];
+  const todayForecast = forecastT[0];
+
   return (
     <main className="weather-page">
-      <Link to="/applications">
-        ← Back to applications
-      </Link>
+      <Link to="/applications">← Back to applications</Link>
 
       <header>
         <p>Current weather</p>
 
         <h1>{location?.name ?? "Unknown location"}</h1>
 
-        <p>
-          {location?.country ?? ""}
-        </p>
+        <p>{location?.country ?? ""}</p>
       </header>
 
-      <section>
-        <h2>
-          {current?.temperature_celsius ?? "--"} °C
-        </h2>
+      <section className="weather-current">
+        <div className="weather-current__temperature">
+          <span>Current temperature</span>
 
-        <p>
-          Feels like{" "}
-          {current?.apparent_temperature_celsius ?? "--"} °C
-        </p>
+          <strong>{current?.temperature_celsius ?? "--"} °C</strong>
+        </div>
 
-        <p>
-          Humidity: {current?.humidity_percent ?? "--"}%
-        </p>
+        <div className="weather-current__metrics">
+          <div className="weather-metric">
+            <span>Feels like</span>
+            <strong>{current?.apparent_temperature_celsius ?? "--"} °C</strong>
+          </div>
 
-        <p>
-          Wind: {current?.wind_speed_kmh ?? "--"} km/h
-        </p>
+          <div className="weather-metric">
+            <span>Today high</span>
+            <strong>
+              {todayForecast?.maximum_temperature_celsius ?? "--"} °C
+            </strong>
+          </div>
 
-        <p>
-          Precipitation:{" "}
-          {current?.precipitation_mm ?? "--"} mm
-        </p>
+          <div className="weather-metric">
+            <span>Today low</span>
+            <strong>
+              {todayForecast?.minimum_temperature_celsius ?? "--"} °C
+            </strong>
+          </div>
+
+          <div className="weather-metric">
+            <span>Humidity</span>
+            <strong>{current?.humidity_percent ?? "--"}%</strong>
+          </div>
+
+          <div className="weather-metric">
+            <span>Wind</span>
+            <strong>{current?.wind_speed_kmh ?? "--"} km/h</strong>
+          </div>
+
+          <div className="weather-metric">
+            <span>Rain chance</span>
+            <strong>
+              {todayForecast?.precipitation_probability_percent ?? "--"}%
+            </strong>
+          </div>
+
+          <div className="weather-metric">
+            <span>Sunrise</span>
+            <strong>{formatTime(todayForecast?.sunrise)}</strong>
+          </div>
+
+          <div className="weather-metric">
+            <span>Sunset</span>
+            <strong>{formatTime(todayForecast?.sunset)}</strong>
+          </div>
+        </div>
+      </section>
+      <section className="weather-forecast">
+        <div className="weather-forecast__header">
+          <div>
+            <p className="weather-forecast__eyebrow">Upcoming weather</p>
+
+            <h2>7-day forecast</h2>
+          </div>
+        </div>
+        <div className="weather-forecast__grid">
+          {forecast.map((day) => (
+            <article className="weather-forecast-card" key={day.date}>
+              <h3>{formatForecastDate(day.date)}</h3>
+
+              <div className="weather-forecast-card__temperatures">
+                <strong>{day.maximum_temperature_celsius ?? "--"}°</strong>
+
+                <span>{day.minimum_temperature_celsius ?? "--"}°</span>
+              </div>
+
+              <div className="weather-forecast-card__details">
+                <p>
+                  Rain chance
+                  <strong>
+                    {day.precipitation_probability_percent ?? "--"}%
+                  </strong>
+                </p>
+
+                <p>
+                  Precipitation
+                  <strong>{day.precipitation_mm ?? "--"} mm</strong>
+                </p>
+
+                <p>
+                  Max wind
+                  <strong>{day.maximum_wind_speed_kmh ?? "--"} km/h</strong>
+                </p>
+                <p>
+                  Sunrise
+                  <strong>{formatTime(day.sunrise)}</strong>
+                </p>
+                <p>
+                  Sunset
+                  <strong>{formatTime(day.sunset)}</strong>
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </main>
   );
