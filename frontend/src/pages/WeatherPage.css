@@ -133,21 +133,44 @@
   /* Horizontally scrollable forecast */
   
   .weather-forecast__grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(170px, 1fr);
+    display: flex;
     gap: 14px;
   
+    width: 100%;
     overflow-x: auto;
-    padding-bottom: 12px;
+    overflow-y: hidden;
   
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-    overscroll-behavior-x: contain;
+    padding-bottom: 8px;
+  
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior: contain;
+  
+    /*
+     * JavaScript now handles both horizontal
+     * and vertical dragging.
+     */
+    touch-action: none;
+  
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .weather-forecast__grid::-webkit-scrollbar {
+    display: none;
   }
   
   .weather-forecast-card {
-    min-width: 0;
+    flex: 0 0 200px;
+    box-sizing: border-box;
+  
+    scroll-snap-align: start;
+  }
+  
+  .weather-forecast-card {
+    flex: 0 0 200px;
+  
+    box-sizing: border-box;
     padding: 18px;
   
     border: 1px solid rgba(183, 156, 255, 0.2);

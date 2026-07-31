@@ -9,8 +9,16 @@ function useTouchScroll(scrollContainerRef) {
     }
 
     let activePointerId = null;
+
+    let startX = 0;
     let startY = 0;
+
     let startScrollTop = 0;
+    let startScrollLeft = 0;
+
+    let horizontalContainer = null;
+    let scrollDirection = null;
+
     let hasMoved = false;
     let suppressClick = false;
     let suppressClickTimer = null;
@@ -21,8 +29,23 @@ function useTouchScroll(scrollContainerRef) {
       }
 
       activePointerId = event.pointerId;
+
+      startX = event.clientX;
       startY = event.clientY;
+
       startScrollTop = scrollContainer.scrollTop;
+
+      horizontalContainer =
+        event.target instanceof Element
+          ? event.target.closest(
+              ".weather-forecast__grid",
+            )
+          : null;
+
+      startScrollLeft =
+        horizontalContainer?.scrollLeft ?? 0;
+
+      scrollDirection = null;
       hasMoved = false;
     }
 
@@ -31,15 +54,46 @@ function useTouchScroll(scrollContainerRef) {
         return;
       }
 
-      const movedDistance = startY - event.clientY;
+      const movedX = startX - event.clientX;
+      const movedY = startY - event.clientY;
 
-      if (Math.abs(movedDistance) > 5) {
+      /*
+       * Wait until the finger has moved enough before
+       * deciding whether this is horizontal or vertical.
+       */
+      if (
+        scrollDirection === null &&
+        Math.max(
+          Math.abs(movedX),
+          Math.abs(movedY),
+        ) > 5
+      ) {
         hasMoved = true;
+
+        if (
+          horizontalContainer &&
+          Math.abs(movedX) > Math.abs(movedY)
+        ) {
+          scrollDirection = "horizontal";
+        } else {
+          scrollDirection = "vertical";
+        }
       }
 
-      scrollContainer.scrollTop = startScrollTop + movedDistance;
+      if (scrollDirection === "horizontal") {
+        horizontalContainer.scrollLeft =
+          startScrollLeft + movedX;
+      }
 
-      if (event.cancelable) {
+      if (scrollDirection === "vertical") {
+        scrollContainer.scrollTop =
+          startScrollTop + movedY;
+      }
+
+      if (
+        scrollDirection !== null &&
+        event.cancelable
+      ) {
         event.preventDefault();
       }
     }
@@ -50,15 +104,22 @@ function useTouchScroll(scrollContainerRef) {
       }
 
       activePointerId = null;
+      horizontalContainer = null;
+      scrollDirection = null;
 
       if (hasMoved) {
         suppressClick = true;
 
-        window.clearTimeout(suppressClickTimer);
+        window.clearTimeout(
+          suppressClickTimer,
+        );
 
-        suppressClickTimer = window.setTimeout(() => {
-          suppressClick = false;
-        }, 300);
+        suppressClickTimer = window.setTimeout(
+          () => {
+            suppressClick = false;
+          },
+          300,
+        );
       }
     }
 
@@ -69,33 +130,69 @@ function useTouchScroll(scrollContainerRef) {
 
       event.preventDefault();
       event.stopPropagation();
+
       suppressClick = false;
     }
 
-    scrollContainer.addEventListener("pointerdown", handlePointerDown);
+    scrollContainer.addEventListener(
+      "pointerdown",
+      handlePointerDown,
+    );
 
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: false,
-    });
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+      {
+        passive: false,
+      },
+    );
 
-    window.addEventListener("pointerup", handlePointerEnd);
+    window.addEventListener(
+      "pointerup",
+      handlePointerEnd,
+    );
 
-    window.addEventListener("pointercancel", handlePointerEnd);
+    window.addEventListener(
+      "pointercancel",
+      handlePointerEnd,
+    );
 
-    scrollContainer.addEventListener("click", handleClick, true);
+    scrollContainer.addEventListener(
+      "click",
+      handleClick,
+      true,
+    );
 
     return () => {
-      scrollContainer.removeEventListener("pointerdown", handlePointerDown);
+      scrollContainer.removeEventListener(
+        "pointerdown",
+        handlePointerDown,
+      );
 
-      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove,
+      );
 
-      window.removeEventListener("pointerup", handlePointerEnd);
+      window.removeEventListener(
+        "pointerup",
+        handlePointerEnd,
+      );
 
-      window.removeEventListener("pointercancel", handlePointerEnd);
+      window.removeEventListener(
+        "pointercancel",
+        handlePointerEnd,
+      );
 
-      scrollContainer.removeEventListener("click", handleClick, true);
+      scrollContainer.removeEventListener(
+        "click",
+        handleClick,
+        true,
+      );
 
-      window.clearTimeout(suppressClickTimer);
+      window.clearTimeout(
+        suppressClickTimer,
+      );
     };
   }, [scrollContainerRef]);
 }
