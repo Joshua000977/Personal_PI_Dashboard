@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import SystemStats from "../components/SystemStats";
 import useSystemData from "../hooks/useSystemData";
+import { useSettings } from "../context/SettingsContext";
+import { getSystemStatus } from "../utils/getSystemStatus";
 import "./SystemPage.css";
 import { API_BASE_URL } from "../config";
 
@@ -23,6 +25,18 @@ function SystemPage() {
     health?.frequency_capped_occurred ||
     health?.throttling_occurred ||
     health?.soft_temperature_limit_occurred;
+
+  const { settings } = useSettings();
+
+  const refreshSeconds = settings.systemRefreshInterval / 1000;
+
+  const refreshUnit = refreshSeconds === 1 ? "second" : "seconds";
+
+  const systemStatus = getSystemStatus({
+    systemData,
+    backendOnline,
+    temperatureWarningLimit: settings.temperatureWarningLimit,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -133,13 +147,13 @@ function SystemPage() {
           </div>
 
           <span className="system-live-section__refresh">
-            Refreshes every 3 seconds
+            Refreshed every {refreshSeconds} {refreshUnit}
           </span>
         </div>
 
         {liveError && <p className="system-page__error">{liveError}</p>}
 
-        <SystemStats systemData={systemData} />
+        <SystemStats systemData={systemData} systemStatus={systemStatus} />
 
         <div className="system-runtime-details">
           <div className="system-detail">

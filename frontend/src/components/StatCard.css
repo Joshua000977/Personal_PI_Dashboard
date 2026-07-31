@@ -5,15 +5,21 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
 
-  background: linear-gradient(
-    145deg,
-    rgba(35, 27, 54, 0.94),
-    rgba(18, 18, 31, 0.94)
-  );
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35, 27, 54, 0.94),
+      rgba(18, 18, 31, 0.94)
+    );
 
   box-shadow:
     0 18px 45px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .stat-card-header {
@@ -26,6 +32,7 @@
 
 .stat-card-title {
   color: #a49daf;
+
   font-size: 13px;
   font-weight: 600;
 }
@@ -46,21 +53,30 @@
 
   font-size: 10px;
   font-weight: 800;
+
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 
 .stat-card-value {
   margin: 0 0 6px;
 
   color: #f7f4fb;
+
   font-size: 29px;
   font-weight: 750;
   letter-spacing: -0.04em;
+
+  transition: color 180ms ease;
 }
 
 .stat-card-detail {
   margin: 0 0 17px;
 
   color: #777184;
+
   font-size: 12px;
 }
 
@@ -69,6 +85,7 @@
   height: 7px;
 
   overflow: hidden;
+
   border-radius: 999px;
   background: #292536;
 }
@@ -78,18 +95,176 @@
 
   border-radius: inherit;
 
-  background: linear-gradient(90deg, #7559ee, #aa5de8);
+  background:
+    linear-gradient(
+      90deg,
+      #7559ee,
+      #aa5de8
+    );
 
-  box-shadow: 0 0 12px rgba(156, 86, 240, 0.38);
+  box-shadow:
+    0 0 12px rgba(156, 86, 240, 0.38);
 
-  transition: width 300ms ease;
+  transition:
+    width 300ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+/* Healthy temperature */
+
+.stat-card--healthy {
+  border-color: rgba(104, 216, 131, 0.45);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(44, 112, 61, 0.34),
+      rgba(18, 54, 29, 0.24)
+    );
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.22),
+    0 10px 28px rgba(39, 124, 59, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.stat-card--healthy .stat-card-title {
+  color: #9dccaa;
+}
+
+.stat-card--healthy .stat-card-icon {
+  border-color: rgba(104, 216, 131, 0.32);
+
+  color: #bdebc4;
+  background: rgba(44, 112, 61, 0.27);
+}
+
+.stat-card--healthy .stat-card-value {
+  color: #cef4d4;
+}
+
+.stat-card--healthy .stat-card-detail {
+  color: #8eb798;
+}
+
+.stat-card--healthy .stat-card-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      #47b864,
+      #75dc8d
+    );
+
+  box-shadow:
+    0 0 12px rgba(71, 184, 100, 0.4);
+}
+
+/* Warm temperature */
+
+.stat-card--warning {
+  border-color: rgba(255, 184, 92, 0.52);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(149, 91, 27, 0.32),
+      rgba(75, 45, 18, 0.2)
+    );
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.22),
+    0 10px 28px rgba(149, 91, 27, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.stat-card--warning .stat-card-title {
+  color: #dbb67f;
+}
+
+.stat-card--warning .stat-card-icon {
+  border-color: rgba(255, 184, 92, 0.34);
+
+  color: #ffd28e;
+  background: rgba(149, 91, 27, 0.26);
+}
+
+.stat-card--warning .stat-card-value {
+  color: #ffd9a2;
+}
+
+.stat-card--warning .stat-card-detail {
+  color: #c6a474;
+}
+
+.stat-card--warning .stat-card-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      #d98931,
+      #ffbc63
+    );
+
+  box-shadow:
+    0 0 12px rgba(255, 184, 92, 0.4);
+}
+
+/* Critical temperature */
+
+.stat-card--critical {
+  border-color: rgba(255, 103, 127, 0.58);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(143, 42, 62, 0.36),
+      rgba(77, 24, 38, 0.22)
+    );
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.22),
+    0 10px 28px rgba(117, 28, 48, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.stat-card--critical .stat-card-title {
+  color: #d68f9a;
+}
+
+.stat-card--critical .stat-card-icon {
+  border-color: rgba(255, 103, 127, 0.36);
+
+  color: #ffadb9;
+  background: rgba(143, 42, 62, 0.28);
+}
+
+.stat-card--critical .stat-card-value {
+  color: #ffc0ca;
+}
+
+.stat-card--critical .stat-card-detail {
+  color: #cf8b96;
+}
+
+.stat-card--critical .stat-card-progress-fill {
+  background:
+    linear-gradient(
+      90deg,
+      #d94a63,
+      #ff768c
+    );
+
+  box-shadow:
+    0 0 12px rgba(255, 103, 127, 0.42);
 }
 
 /* Raspberry Pi 7-inch landscape display */
+
 @media (max-width: 1100px) and (max-height: 700px) {
   .stat-card {
     min-height: 155px;
     padding: 20px;
+
     border-radius: 18px;
   }
 
@@ -103,12 +278,14 @@
 
   .stat-card-value {
     margin: 18px 0 8px;
+
     font-size: 2.15rem;
     line-height: 1;
   }
 
   .stat-card-detail {
     min-height: 2.5em;
+
     font-size: 0.9rem;
     line-height: 1.35;
   }

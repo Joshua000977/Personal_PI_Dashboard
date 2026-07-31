@@ -1,33 +1,20 @@
 import StatCard from "./StatCard";
 import "./SystemStats.css";
+import { useSettings } from "../context/SettingsContext";
+import SettingsPage from "../pages/SettingsPage";
 
-
-function SystemStats({ systemData }) {
-  const temperature = systemData?.cpu.temperature_celsius;
-
-  const temperatureProgress =
-    temperature == null
-      ? 0
-      : Math.min((temperature / 85) * 100, 100);
-
-  let temperatureDetail = "Loading temperature";
-
-  if (temperature != null) {
-    if (temperature < 70) {
-      temperatureDetail = "System temperature normal";
-    } else if (temperature < 80) {
-      temperatureDetail = "System is running warm";
-    } else {
-      temperatureDetail = "System temperature very high";
-    }
-  }
+function SystemStats({ systemData, systemStatus }) {
+  const {
+    temperature,
+    temperatureProgress,
+    temperatureDetail,
+    temperatureVariant,
+  } = systemStatus ?? {};
 
   const systemCards = [
     {
       title: "CPU Usage",
-      value: systemData
-        ? `${systemData.cpu.usage_percent.toFixed(0)}%`
-        : "--%",
+      value: systemData ? `${systemData.cpu.usage_percent.toFixed(0)}%` : "--%",
       detail: systemData
         ? `${systemData.cpu.cores} logical cores`
         : "Loading system data",
@@ -36,9 +23,7 @@ function SystemStats({ systemData }) {
     },
     {
       title: "Memory",
-      value: systemData
-        ? `${systemData.memory.used_gb} GB`
-        : "-- GB",
+      value: systemData ? `${systemData.memory.used_gb} GB` : "-- GB",
       detail: systemData
         ? `of ${systemData.memory.total_gb} GB used`
         : "Loading system data",
@@ -47,19 +32,15 @@ function SystemStats({ systemData }) {
     },
     {
       title: "Temperature",
-      value:
-        temperature == null
-          ? "--°C"
-          : `${temperature}°C`,
+      value: temperature == null ? "--°C" : `${temperature}°C`,
       detail: temperatureDetail,
       icon: "TEMP",
       progress: temperatureProgress,
+      variant: temperatureVariant,
     },
     {
       title: "Storage",
-      value: systemData
-        ? `${systemData.storage.used_gb} GB`
-        : "-- GB",
+      value: systemData ? `${systemData.storage.used_gb} GB` : "-- GB",
       detail: systemData
         ? `of ${systemData.storage.total_gb} GB used`
         : "Loading system data",
@@ -76,6 +57,5 @@ function SystemStats({ systemData }) {
     </section>
   );
 }
-
 
 export default SystemStats;

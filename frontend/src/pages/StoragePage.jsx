@@ -1,30 +1,28 @@
 import { useEffect, useState } from "react";
 
 import { API_BASE_URL } from "../config";
+import { useSettings } from "../context/SettingsContext";
 import "./StoragePage.css";
-
-
-const REFRESH_INTERVAL = 5000;
-
 
 function StoragePage() {
   const [storageData, setStorageData] = useState(null);
   const [storageError, setStorageError] = useState("");
   const [backendOnline, setBackendOnline] = useState(false);
 
+  const { settings } = useSettings();
+
+  const refreshInterval = settings.storageRefreshInterval / 1000;
+  const refreshUnit = refreshInterval === 1 ? "second" : "seconds";
+
   useEffect(() => {
     let cancelled = false;
 
     async function loadStorageData() {
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/storage`,
-        );
+        const response = await fetch(`${API_BASE_URL}/api/storage`);
 
         if (!response.ok) {
-          throw new Error(
-            `The backend returned status ${response.status}.`,
-          );
+          throw new Error(`The backend returned status ${response.status}.`);
         }
 
         const data = await response.json();
@@ -46,7 +44,7 @@ function StoragePage() {
 
     const storageInterval = window.setInterval(
       loadStorageData,
-      REFRESH_INTERVAL,
+      refreshInterval
     );
 
     return () => {
@@ -60,24 +58,19 @@ function StoragePage() {
 
   const usagePercent = filesystem?.usage_percent ?? 0;
 
-  const safeUsagePercent = Math.min(
-    Math.max(usagePercent, 0),
-    100,
-  );
+  const safeUsagePercent = Math.min(Math.max(usagePercent, 0), 100);
 
   return (
     <main className="storage-page">
       <header className="storage-page__header">
         <div>
-          <p className="storage-page__eyebrow">
-            Raspberry Pi
-          </p>
+          <p className="storage-page__eyebrow">Raspberry Pi</p>
 
           <h1>Storage</h1>
 
           <p>
-            Monitor available storage space and filesystem
-            usage on this Raspberry Pi.
+            Monitor available storage space and filesystem usage on this
+            Raspberry Pi.
           </p>
         </div>
 
@@ -92,21 +85,13 @@ function StoragePage() {
         </span>
       </header>
 
-      {storageError && (
-        <p className="storage-page__error">
-          {storageError}
-        </p>
-      )}
+      {storageError && <p className="storage-page__error">{storageError}</p>}
 
       <section className="storage-overview">
         <article className="storage-card">
           <span>Total storage</span>
 
-          <strong>
-            {filesystem
-              ? `${filesystem.total_gb} GB`
-              : "-- GB"}
-          </strong>
+          <strong>{filesystem ? `${filesystem.total_gb} GB` : "-- GB"}</strong>
 
           <p>Complete filesystem capacity</p>
         </article>
@@ -114,11 +99,7 @@ function StoragePage() {
         <article className="storage-card">
           <span>Used storage</span>
 
-          <strong>
-            {filesystem
-              ? `${filesystem.used_gb} GB`
-              : "-- GB"}
-          </strong>
+          <strong>{filesystem ? `${filesystem.used_gb} GB` : "-- GB"}</strong>
 
           <p>
             {filesystem
@@ -130,11 +111,7 @@ function StoragePage() {
         <article className="storage-card">
           <span>Free storage</span>
 
-          <strong>
-            {filesystem
-              ? `${filesystem.free_gb} GB`
-              : "-- GB"}
-          </strong>
+          <strong>{filesystem ? `${filesystem.free_gb} GB` : "-- GB"}</strong>
 
           <p>Storage space still available</p>
         </article>
@@ -142,9 +119,7 @@ function StoragePage() {
         <article className="storage-card">
           <span>Mount point</span>
 
-          <strong>
-            {filesystem?.mount_point ?? "--"}
-          </strong>
+          <strong>{filesystem?.mount_point ?? "--"}</strong>
 
           <p>Main Raspberry Pi filesystem</p>
         </article>
@@ -159,10 +134,7 @@ function StoragePage() {
           <div>
             <span>Storage health</span>
 
-            <strong>
-              {health?.summary ??
-                "Loading storage status..."}
-            </strong>
+            <strong>{health?.summary ?? "Loading storage status..."}</strong>
           </div>
 
           <span className="storage-health__badge">
@@ -175,9 +147,7 @@ function StoragePage() {
             <span>Filesystem usage</span>
 
             <strong>
-              {filesystem
-                ? `${filesystem.usage_percent}%`
-                : "--%"}
+              {filesystem ? `${filesystem.usage_percent}%` : "--%"}
             </strong>
           </div>
 
@@ -195,14 +165,14 @@ function StoragePage() {
       <section className="storage-information">
         <div>
           <span>Refresh interval</span>
-          <strong>5 seconds</strong>
+          <strong>
+            {refreshInterval} {refreshUnit}
+          </strong>
         </div>
 
         <div>
           <span>Filesystem</span>
-          <strong>
-            {filesystem?.mount_point ?? "Loading..."}
-          </strong>
+          <strong>{filesystem?.mount_point ?? "Loading..."}</strong>
         </div>
 
         <div>
@@ -213,6 +183,5 @@ function StoragePage() {
     </main>
   );
 }
-
 
 export default StoragePage;

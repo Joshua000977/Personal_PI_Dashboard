@@ -51,6 +51,7 @@ coverage/
 # =========================================================
 
 __pycache__/
+backend/__pycache__/main.cpython-313.pyc
 *.py[cod]
 *$py.class
 

@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 
 import { API_BASE_URL } from "../config";
+import { useSettings } from "../context/SettingsContext";
 
-const API_URL = `${API_BASE_URL}/api/system`;;
+const API_URL = `${API_BASE_URL}/api/system`;
 
-function useSystemData(refreshInterval = 3000) {
-  const [systemData, setSystemData] = useState(null);
-  const [backendOnline, setBackendOnline] = useState(false);
-  const [error, setError] = useState("");
+function useSystemData() {
+  const { settings } = useSettings();
+
+  const refreshInterval =
+    settings.systemRefreshInterval;
+
+  const [systemData, setSystemData] =
+    useState(null);
+
+  const [backendOnline, setBackendOnline] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -17,7 +28,9 @@ function useSystemData(refreshInterval = 3000) {
         const response = await fetch(API_URL);
 
         if (!response.ok) {
-          throw new Error(`Backend returned ${response.status}`);
+          throw new Error(
+            `Backend returned ${response.status}`,
+          );
         }
 
         const data = await response.json();
@@ -28,7 +41,10 @@ function useSystemData(refreshInterval = 3000) {
           setError("");
         }
       } catch (requestError) {
-        console.error("Could not load system information:", requestError);
+        console.error(
+          "Could not load system information:",
+          requestError,
+        );
 
         if (!cancelled) {
           setBackendOnline(false);
@@ -39,10 +55,14 @@ function useSystemData(refreshInterval = 3000) {
 
     loadSystemData();
 
-    const dataInterval = window.setInterval(loadSystemData, refreshInterval);
+    const dataInterval = window.setInterval(
+      loadSystemData,
+      refreshInterval,
+    );
 
     return () => {
       cancelled = true;
+
       window.clearInterval(dataInterval);
     };
   }, [refreshInterval]);

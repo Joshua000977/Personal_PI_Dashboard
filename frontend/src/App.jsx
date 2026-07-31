@@ -7,10 +7,11 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import "./App.css";
 import SystemPage from "./pages/SystemPage";
 import StoragePage from "./pages/StoragePage";
-
-import useTouchScroll from "./hooks/useTouchScroll";
 import ApplicationsPage from "./pages/ApplicationsPage";
 import ApplicationDetailPage from "./pages/ApplicationDetailPage";
+import SettingsPage from "./pages/SettingsPage";
+import useTouchScroll from "./hooks/useTouchScroll";
+
 
 function App() {
   const pageContentRef = useRef(null);
@@ -33,7 +34,7 @@ function App() {
             <Route path="/storage" element={<StoragePage />} />
             <Route
               path="/settings"
-              element={<PlaceholderPage title="Settings" />}
+              element={<SettingsPage />}
             />
           </Routes>
         </main>

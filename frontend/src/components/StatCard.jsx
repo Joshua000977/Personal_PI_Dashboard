@@ -1,10 +1,17 @@
 import "./StatCard.css";
 
-function StatCard({ title, value, detail, icon, progress = 0 }) {
+function StatCard({
+  title,
+  value,
+  detail,
+  icon,
+  progress = 0,
+  variant = "default",
+}) {
   const safeProgress = Math.min(Math.max(Number(progress) || 0, 0), 100);
 
   return (
-    <article className="stat-card">
+    <article className={`stat-card stat-card--${variant}`}>
       <div className="stat-card-header">
         <span className="stat-card-title">{title}</span>
         <span className="stat-card-icon">{icon}</span>

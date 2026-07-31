@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import SystemStats from "../components/SystemStats";
 import useSystemData from "../hooks/useSystemData";
+import { useSettings } from "../context/SettingsContext";
+import { getSystemStatus } from "../utils/getSystemStatus";
 import "./DashboardPage.css";
 
 const quickActions = [
@@ -30,12 +32,16 @@ const activity = [
 ];
 
 function DashboardPage() {
-  const {
-    systemData,
-    backendOnline,
-  } = useSystemData();
+  const { systemData, backendOnline } = useSystemData();
 
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { settings } = useSettings();
+
+  const systemStatus = getSystemStatus({
+    systemData,
+    backendOnline,
+    temperatureWarningLimit: settings.temperatureWarningLimit,
+  });
 
   useEffect(() => {
     const clockInterval = window.setInterval(() => {
@@ -63,8 +69,8 @@ function DashboardPage() {
           <h1>Dashboard</h1>
           <p>Welcome back, Joshua. Everything looks good.</p>
           <p>
-  Viewport: {window.innerWidth} × {window.innerHeight}
-</p>
+            Viewport: {window.innerWidth} × {window.innerHeight}
+          </p>
         </div>
 
         <div className="dashboard-topbar-right">
@@ -79,11 +85,12 @@ function DashboardPage() {
 
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-badge">
-            <span
-              className={`status-dot ${backendOnline ? "online" : "offline"}`}
-            />
-            {backendOnline ? "All systems operational" : "Backend offline"}
+          <div
+            className={`dashboard-hero__status dashboard-hero__status--${systemStatus.dashboardStatus.variant}`}
+          >
+            <span className="dashboard-hero__status-dot" />
+
+            {systemStatus.dashboardStatus.text}
           </div>
 
           <h2>Your Raspberry Pi is running smoothly.</h2>
@@ -102,7 +109,7 @@ function DashboardPage() {
         </div>
       </section>
 
-      <SystemStats systemData={systemData} />
+      <SystemStats systemData={systemData} systemStatus={systemStatus} />
 
       <section className="lower-grid">
         <article className="dashboard-card">
