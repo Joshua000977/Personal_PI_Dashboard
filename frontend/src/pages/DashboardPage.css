@@ -544,3 +544,125 @@
     font-size: 0.72rem;
   }
 }
+.power-dialog-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+
+  display: grid;
+  padding: 24px;
+
+  background: rgba(4, 5, 12, 0.76);
+  backdrop-filter: blur(8px);
+
+  place-items: center;
+}
+
+.power-dialog {
+  width: min(420px, 100%);
+  padding: 26px;
+
+  border: 1px solid rgba(183, 156, 255, 0.3);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(49, 35, 78, 0.98),
+      rgba(20, 18, 34, 0.98)
+    );
+
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.5);
+
+  text-align: center;
+}
+
+.power-dialog__icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 18px;
+
+  border: 1px solid rgba(255, 123, 145, 0.35);
+  border-radius: 17px;
+
+  color: #ffc0ca;
+  background: rgba(137, 40, 59, 0.24);
+
+  font-size: 1.6rem;
+  font-weight: 800;
+
+  place-items: center;
+}
+
+.power-dialog h3 {
+  margin: 0;
+
+  color: #f7f3ff;
+
+  font-size: 1.35rem;
+}
+
+.power-dialog p {
+  margin: 12px 0 0;
+
+  color: #a9a1b8;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.power-dialog__error {
+  color: #ff9daf !important;
+}
+
+.power-dialog__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.power-dialog__button {
+  min-height: 46px;
+  padding: 0 16px;
+
+  border-radius: 13px;
+
+  color: #f5f1ff;
+
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.power-dialog__button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.power-dialog__button--cancel {
+  border: 1px solid rgba(183, 156, 255, 0.25);
+  background: rgba(101, 75, 151, 0.18);
+}
+
+.power-dialog__button--confirm {
+  border: 1px solid rgba(255, 103, 127, 0.45);
+  background: rgba(145, 39, 59, 0.34);
+}
+
+.power-dialog__button--confirm:hover,
+.power-dialog__button--confirm:focus-visible {
+  background: rgba(171, 46, 70, 0.48);
+}
+
+.power-dialog__button--cancel:hover,
+.power-dialog__button--cancel:focus-visible {
+  background: rgba(116, 87, 171, 0.3);
+}

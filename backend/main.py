@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib import error, request
 
 import psutil
-from fastapi import FastAPI
+from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import FRONTEND_URL
 
@@ -23,6 +23,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+def run_power_command(command: str) -> None:
+    """Execute an approved Raspberry Pi power command."""
+
+    time.sleep(1)
+
+    subprocess.run(
+        [
+            "sudo",
+            "/usr/bin/systemctl",
+            command,
+        ],
+        check=False,
+        timeout=15,
+    )
 
 def get_pi_model() -> str:
     """Read the Raspberry Pi model name."""
@@ -311,5 +325,35 @@ def get_storage_information():
             "state": storage_state,
             "summary": storage_summary,
         },
+    }
+@app.post("/api/system/restart", status_code=202)
+def restart_raspberry_pi(
+    background_tasks: BackgroundTasks,
+):
+    background_tasks.add_task(
+        run_power_command,
+        "reboot",
+    )
+
+    return {
+        "accepted": True,
+        "action": "restart",
+        "message": "Raspberry Pi restart scheduled",
+    }
+
+
+@app.post("/api/system/shutdown", status_code=202)
+def shutdown_raspberry_pi(
+    background_tasks: BackgroundTasks,
+):
+    background_tasks.add_task(
+        run_power_command,
+        "poweroff",
+    )
+
+    return {
+        "accepted": True,
+        "action": "shutdown",
+        "message": "Raspberry Pi shutdown scheduled",
     }
     

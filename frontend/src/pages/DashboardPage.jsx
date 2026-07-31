@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { API_BASE_URL } from "../config";
 import SystemStats from "../components/SystemStats";
 import useSystemData from "../hooks/useSystemData";
 import { useSettings } from "../context/SettingsContext";
@@ -7,10 +9,22 @@ import { getSystemStatus } from "../utils/getSystemStatus";
 import "./DashboardPage.css";
 
 const quickActions = [
-  { title: "Restart Pi", icon: "↻" },
-  { title: "Shutdown", icon: "⏻" },
-  { title: "Open Terminal", icon: ">_" },
-  { title: "Settings", icon: "⚙" },
+  {
+    id: "restart",
+    title: "Restart Pi",
+    icon: "↻",
+  },
+  {
+    id: "shutdown",
+    title: "Shutdown",
+    icon: "⏻",
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    icon: "⚙",
+    path: "/settings",
+  },
 ];
 
 const activity = [
@@ -43,6 +57,64 @@ function DashboardPage() {
     temperatureWarningLimit: settings.temperatureWarningLimit,
   });
 
+  const navigate = useNavigate();
+
+  const [selectedPowerAction, setSelectedPowerAction] = useState(null);
+
+  const [powerActionLoading, setPowerActionLoading] = useState(false);
+
+  const [powerActionError, setPowerActionError] = useState("");
+
+  const [powerActionSent, setPowerActionSent] = useState(false);
+
+  function handleQuickAction(action) {
+    if (action.path) {
+      navigate(action.path);
+      return;
+    }
+
+    setSelectedPowerAction(action);
+    setPowerActionError("");
+    setPowerActionSent(false);
+  }
+  function closePowerDialog() {
+    if (powerActionLoading || powerActionSent) {
+      return;
+    }
+
+    setSelectedPowerAction(null);
+    setPowerActionError("");
+  }
+
+  async function confirmPowerAction() {
+    if (!selectedPowerAction) {
+      return;
+    }
+
+    setPowerActionLoading(true);
+    setPowerActionError("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/system/${selectedPowerAction.id}`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Backend returned status ${response.status}`);
+      }
+
+      setPowerActionSent(true);
+    } catch (requestError) {
+      console.error("Could not execute power action:", requestError);
+
+      setPowerActionError(requestError.message);
+    } finally {
+      setPowerActionLoading(false);
+    }
+  }
   useEffect(() => {
     const clockInterval = window.setInterval(() => {
       setCurrentTime(new Date());
@@ -124,6 +196,7 @@ function DashboardPage() {
                 className="action-button"
                 key={action.title}
                 type="button"
+                onClick={() => handleQuickAction(action)}
               >
                 <span className="action-icon">{action.icon}</span>
                 <span className="action-title">{action.title}</span>
@@ -154,6 +227,71 @@ function DashboardPage() {
           </div>
         </article>
       </section>
+      {selectedPowerAction && (
+        <div
+          className="power-dialog-backdrop"
+          role="presentation"
+          onClick={closePowerDialog}
+        >
+          <section
+            className="power-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="power-dialog-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="power-dialog__icon">
+              {selectedPowerAction.icon}
+            </span>
+
+            {!powerActionSent ? (
+              <>
+                <h3 id="power-dialog-title">{selectedPowerAction.title}?</h3>
+
+                <p>
+                  {selectedPowerAction.id === "restart"
+                    ? "The dashboard will be unavailable briefly while the Raspberry Pi restarts."
+                    : "The Raspberry Pi will shut down completely and must be powered on manually."}
+                </p>
+
+                {powerActionError && (
+                  <p className="power-dialog__error">{powerActionError}</p>
+                )}
+
+                <div className="power-dialog__actions">
+                  <button
+                    className="power-dialog__button power-dialog__button--cancel"
+                    type="button"
+                    disabled={powerActionLoading}
+                    onClick={closePowerDialog}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="power-dialog__button power-dialog__button--confirm"
+                    type="button"
+                    disabled={powerActionLoading}
+                    onClick={confirmPowerAction}
+                  >
+                    {powerActionLoading
+                      ? "Sending..."
+                      : selectedPowerAction.title}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 id="power-dialog-title">Command sent</h3>
+
+                <p>
+                  The Raspberry Pi will disconnect from the dashboard shortly.
+                </p>
+              </>
+            )}
+          </section>
+        </div>
+      )}
     </section>
   );
 }
