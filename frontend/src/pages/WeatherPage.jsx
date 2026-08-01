@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 import useWeatherData from "../hooks/useWeatherData";
 import "./WeatherPage.css";
 import getDominantDayCondition from "../utils/getDominantDayCondition";
 import getWeatherCondition from "../utils/getWeatherCondition";
 import getSevereWeatherWarning from "../utils/getSevereWeatherWarning";
+import { useSettings } from "../context/SettingsContext";
 
 function formatForecastDate(dateString) {
   const date = new Date(`${dateString}T12:00:00`);
@@ -25,6 +27,29 @@ function formatTime(dateTimeString) {
 
 function WeatherPage() {
   const { weatherData, weatherLoading, weatherError } = useWeatherData();
+  const { settings, updateSetting } = useSettings();
+
+  const [isLocationPopupOpen, setIsLocationPopupOpen] = useState(false);
+
+  const [locationInput, setLocationInput] = useState(
+    settings.weatherLocationName ?? ""
+  );
+
+  function handleLocationSave(event) {
+    event.preventDefault();
+
+    const cleanedLocation = locationInput.trim();
+
+    if (!cleanedLocation) {
+      return;
+    }
+
+    updateSetting("weatherLocationName", cleanedLocation);
+
+    updateSetting("weatherLocationMode", "manual");
+
+    setIsLocationPopupOpen(false);
+  }
 
   if (weatherLoading) {
     return (
@@ -77,11 +102,19 @@ function WeatherPage() {
         <div className="weather-location-row">
           <h1>{location?.name ?? "Unknown location"}</h1>
 
-          <Link to="/settings" className="weather-settings-button">
+          <button
+            type="button"
+            className="weather-settings-button"
+            onClick={() => {
+              setLocationInput(settings.weatherLocationName ?? "");
+
+              setIsLocationPopupOpen(true);
+            }}
+          >
             Change location
-          </Link>
+          </button>
         </div>
-        <p>{location?.country ?? ""}</p>
+        <p>{location?.region ?? ""}, {location?.country ?? ""}</p>
         <h3>{formatForecastDate(todayForecast.date)}</h3>
       </header>
 
@@ -239,6 +272,54 @@ function WeatherPage() {
           })}
         </div>
       </section>
+      {isLocationPopupOpen && (
+        <div
+          className="weather-popup-backdrop"
+          onMouseDown={() => {
+            setIsLocationPopupOpen(false);
+          }}
+        >
+          <form
+            className="weather-location-popup"
+            onSubmit={handleLocationSave}
+            onMouseDown={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <h2>Change weather location</h2>
+
+            <label htmlFor="weather-location-input">Location</label>
+
+            <input
+              id="weather-location-input"
+              type="text"
+              value={locationInput}
+              onChange={(event) => {
+                setLocationInput(event.target.value);
+              }}
+              placeholder="Straßburg, Kärnten, AT"
+              autoFocus
+            />
+
+            <p className="weather-location-popup__hint">
+              Enter city, region and country code.
+            </p>
+
+            <div className="weather-location-popup__actions">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLocationPopupOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+
+              <button type="submit">Save location</button>
+            </div>
+          </form>
+        </div>
+      )}
     </main>
   );
 }
