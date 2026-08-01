@@ -734,3 +734,32 @@
       flex-basis: 82%;
     }
   }
+  .weather-warning {
+    margin: 8px 0;
+    padding: 8px 10px;
+  
+    border: 1px solid
+      rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+  
+    font-size: 0.85rem;
+    font-weight: 600;
+  
+    background:
+      rgba(0, 0, 0, 0.22);
+  }
+  
+  .weather-warning--stormy {
+    border-color:
+      rgba(115, 190, 255, 0.75);
+  }
+  
+  .weather-warning--rainy {
+    border-color:
+      rgba(110, 190, 255, 0.65);
+  }
+  
+  .weather-warning--snowy {
+    border-color:
+      rgba(220, 240, 255, 0.75);
+  }
