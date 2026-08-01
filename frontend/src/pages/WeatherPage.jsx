@@ -74,11 +74,15 @@ function WeatherPage() {
 
       <header>
         <p>Current weather</p>
+        <div className="weather-location-row">
+          <h1>{location?.name ?? "Unknown location"}</h1>
 
-        <h1>{location?.name ?? "Unknown location"} </h1>
-        <h3>{formatForecastDate(todayForecast.date)}</h3>
-
+          <Link to="/settings" className="weather-settings-button">
+            Change location
+          </Link>
+        </div>
         <p>{location?.country ?? ""}</p>
+        <h3>{formatForecastDate(todayForecast.date)}</h3>
       </header>
 
       <section className="weather-current">

@@ -763,3 +763,32 @@
     border-color:
       rgba(220, 240, 255, 0.75);
   }
+  .weather-settings-button,
+.weather-settings-button:visited,
+.weather-settings-button:hover,
+.weather-settings-button:active {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+
+  text-decoration: none !important;
+  cursor: pointer;
+ 
+}
+  .weather-location-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .weather-location-row h1 {
+    margin: 0;
+  }
