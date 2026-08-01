@@ -192,3 +192,30 @@
   --weather-end: rgba(43, 66, 86, 0.55);
   --weather-border: rgba(220, 245, 255, 0.7);
 }
+.application-tile.weather-tile
+.application-tile__icon {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  font-size: 2rem;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+  line-height: 1;
+}
+.application-tile.weather-tile .application-tile__content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.application-tile.weather-tile
+.application-tile__status {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}

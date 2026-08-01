@@ -16,7 +16,7 @@ const applications = [
     {
       id: "weather",
       name: "Weather",
-      shortLabel: "WE",
+      shortLabel: "",
       description: "Current weather and local forecast.",
       status: "Live",
     },

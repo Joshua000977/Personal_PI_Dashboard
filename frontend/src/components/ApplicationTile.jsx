@@ -7,12 +7,16 @@ function ApplicationTile({ application, weather }) {
     ? `application-tile weather-tile weather-tile--${weather.condition.theme}`
     : "application-tile";
 
+  const tileIcon = weather ? weather.condition.icon : application.shortLabel;
+
   const tileDescription = weather
     ? weather.loading
       ? "Loading weather..."
       : weather.error
       ? "Weather unavailable"
-      : `${weather.temperature ?? "--"} °C · Feels like: ${weather.apparent_temperature ?? "--"} °C · ${weather.condition.label}`
+      : `${weather.temperature ?? "--"} °C · Feels like: ${
+          weather.apparent_temperature ?? "--"
+        } °C · ${weather.condition.label}`
     : application.description;
 
   const tileStatus = weather
@@ -27,14 +31,12 @@ function ApplicationTile({ application, weather }) {
       aria-label={`Open ${application.name}`}
     >
       <div className="application-tile__top">
-        <span className="application-tile__icon">{application.shortLabel}</span>
-
+        <span className="application-tile__icon">{tileIcon}</span>
+        <h2>{application.name}</h2>
         <span className="application-tile__arrow">→</span>
       </div>
 
       <div className="application-tile__content">
-        <h2>{application.name}</h2>
-
         <p>{tileDescription}</p>
       </div>
 
