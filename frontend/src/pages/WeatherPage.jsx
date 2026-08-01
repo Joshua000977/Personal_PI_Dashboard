@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import useWeatherData from "../hooks/useWeatherData";
 import "./WeatherPage.css";
+import getDominantDayCondition from "../utils/getDominantDayCondition";
 
 function formatForecastDate(dateString) {
   const date = new Date(`${dateString}T12:00:00`);
@@ -46,18 +47,27 @@ function WeatherPage() {
   const current = weatherData?.current;
 
   const forecast = (weatherData?.forecast ?? []).slice(1, 8);
-
+  const hourlyForecast = weatherData?.hourly_forecast ?? [];
   const forecastT = weatherData?.forecast ?? [];
   const todayForecast = forecastT[0];
+  const currentWeatherCondition = todayForecast
+    ? getDominantDayCondition(hourlyForecast, todayForecast.date)
+    : {
+        label: "Unknown weather",
+        theme: "default",
+      };
 
   return (
-    <main className="weather-page">
+    <main
+      className={`weather-page weather-page--${currentWeatherCondition.theme}`}
+    >
       <Link to="/applications">← Back to applications</Link>
 
       <header>
         <p>Current weather</p>
 
-        <h1>{location?.name ?? "Unknown location"}</h1>
+        <h1>{location?.name ?? "Unknown location"} </h1>
+        <h3>{formatForecastDate(todayForecast.date)}</h3>
 
         <p>{location?.country ?? ""}</p>
       </header>
@@ -67,6 +77,7 @@ function WeatherPage() {
           <span>Current temperature</span>
 
           <strong>{current?.temperature_celsius ?? "--"} °C</strong>
+          <p>possible {currentWeatherCondition.label}</p>
         </div>
 
         <div className="weather-current__metrics">
@@ -126,44 +137,54 @@ function WeatherPage() {
           </div>
         </div>
         <div className="weather-forecast__grid">
-          {forecast.map((day) => (
-            <article className="weather-forecast-card" key={day.date}>
-              <h3>{formatForecastDate(day.date)}</h3>
+          {forecast.map((day) => {
+            const dayCondition = getDominantDayCondition(
+              hourlyForecast,
+              day.date
+            );
+            return (
+              <article
+                className={`weather-forecast-card weather-forecast-card--${dayCondition.theme}`}
+                key={day.date}
+              >
+                <h3>{formatForecastDate(day.date)}</h3>
 
-              <div className="weather-forecast-card__temperatures">
-                <strong>{day.maximum_temperature_celsius ?? "--"}°</strong>
+                <div className="weather-forecast-card__temperatures">
+                  <strong>{day.maximum_temperature_celsius ?? "--"}°</strong>
 
-                <span>{day.minimum_temperature_celsius ?? "--"}°</span>
-              </div>
+                  <span>{day.minimum_temperature_celsius ?? "--"}°</span>
+                </div>
 
-              <div className="weather-forecast-card__details">
-                <p>
-                  Rain chance
-                  <strong>
-                    {day.precipitation_probability_percent ?? "--"}%
-                  </strong>
-                </p>
+                <div className="weather-forecast-card__details">
+                  <p>possible {dayCondition.label} </p>
+                  <p>
+                    Rain chance
+                    <strong>
+                      {day.precipitation_probability_percent ?? "--"}%
+                    </strong>
+                  </p>
 
-                <p>
-                  Precipitation
-                  <strong>{day.precipitation_mm ?? "--"} mm</strong>
-                </p>
+                  <p>
+                    Precipitation
+                    <strong>{day.precipitation_mm ?? "--"} mm</strong>
+                  </p>
 
-                <p>
-                  Max wind
-                  <strong>{day.maximum_wind_speed_kmh ?? "--"} km/h</strong>
-                </p>
-                <p>
-                  Sunrise
-                  <strong>{formatTime(day.sunrise)}</strong>
-                </p>
-                <p>
-                  Sunset
-                  <strong>{formatTime(day.sunset)}</strong>
-                </p>
-              </div>
-            </article>
-          ))}
+                  <p>
+                    Max wind
+                    <strong>{day.maximum_wind_speed_kmh ?? "--"} km/h</strong>
+                  </p>
+                  <p>
+                    Sunrise
+                    <strong>{formatTime(day.sunrise)}</strong>
+                  </p>
+                  <p>
+                    Sunset
+                    <strong>{formatTime(day.sunset)}</strong>
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     </main>

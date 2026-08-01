@@ -1,11 +1,249 @@
 .weather-page {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #171125 0%,
+        #24143c 50%,
+        #12101c 100%
+      );
+  
+    --weather-card-background:
+      rgba(77, 48, 122, 0.28);
+  
+    --weather-small-card-background:
+      rgba(255, 255, 255, 0.04);
+  
+    --weather-border:
+      rgba(183, 156, 255, 0.22);
+  
+    --weather-accent:
+      #b79cff;
+  
+    --weather-text:
+      rgba(255, 255, 255, 0.96);
+  
+    --weather-muted-text:
+      rgba(255, 255, 255, 0.62);
+  
     width: 100%;
+    min-height: 100%;
     box-sizing: border-box;
     padding: 32px;
+  
+    color: var(--weather-text);
+    background: var(--weather-background);
+  
+    transition:
+      background 500ms ease,
+      color 300ms ease;
   }
   
+  
+  /* ========================================
+     PAGE THEMES
+     ======================================== */
+  
+  .weather-page--default {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #171125 0%,
+        #24143c 50%,
+        #12101c 100%
+      );
+  
+    --weather-card-background:
+      rgba(77, 48, 122, 0.28);
+  
+    --weather-border:
+      rgba(183, 156, 255, 0.22);
+  
+    --weather-accent:
+      #b79cff;
+  }
+  
+  
+  /* Sunny */
+  
+  .weather-page--sunny {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #302348 0%,
+        #85512d 55%,
+        #bd7c31 100%
+      );
+  
+    --weather-card-background:
+      rgba(63, 40, 65, 0.58);
+  
+    --weather-small-card-background:
+      rgba(255, 220, 145, 0.08);
+  
+    --weather-border:
+      rgba(255, 214, 135, 0.3);
+  
+    --weather-accent:
+      #ffd487;
+  }
+  
+  
+  /* Cloudy */
+  
+  .weather-page--cloudy {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #25283a 0%,
+        #454a61 52%,
+        #292c3f 100%
+      );
+  
+    --weather-card-background:
+      rgba(48, 52, 72, 0.62);
+  
+    --weather-small-card-background:
+      rgba(220, 225, 240, 0.06);
+  
+    --weather-border:
+      rgba(200, 208, 230, 0.22);
+  
+    --weather-accent:
+      #cad2e4;
+  }
+  
+  
+  /* Fog */
+  
+  .weather-page--foggy {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #292d38 0%,
+        #5b606b 52%,
+        #343843 100%
+      );
+  
+    --weather-card-background:
+      rgba(57, 62, 73, 0.64);
+  
+    --weather-small-card-background:
+      rgba(230, 235, 240, 0.07);
+  
+    --weather-border:
+      rgba(225, 230, 240, 0.24);
+  
+    --weather-accent:
+      #e0e4ea;
+  }
+  
+  
+  /* Drizzle */
+  
+  .weather-page--drizzly {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #172738 0%,
+        #284a5d 52%,
+        #192c3d 100%
+      );
+  
+    --weather-card-background:
+      rgba(24, 50, 68, 0.65);
+  
+    --weather-small-card-background:
+      rgba(130, 205, 225, 0.07);
+  
+    --weather-border:
+      rgba(140, 210, 230, 0.24);
+  
+    --weather-accent:
+      #8cd4e7;
+  }
+  
+  
+  /* Rain */
+  
+  .weather-page--rainy {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #101827 0%,
+        #193750 52%,
+        #111d2e 100%
+      );
+  
+    --weather-card-background:
+      rgba(18, 40, 59, 0.72);
+  
+    --weather-small-card-background:
+      rgba(95, 174, 220, 0.08);
+  
+    --weather-border:
+      rgba(94, 178, 225, 0.26);
+  
+    --weather-accent:
+      #70c9f5;
+  }
+  
+  
+  /* Snow */
+  
+  .weather-page--snowy {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #293449 0%,
+        #697e98 52%,
+        #394a62 100%
+      );
+  
+    --weather-card-background:
+      rgba(46, 62, 84, 0.6);
+  
+    --weather-small-card-background:
+      rgba(235, 246, 255, 0.1);
+  
+    --weather-border:
+      rgba(225, 242, 255, 0.3);
+  
+    --weather-accent:
+      #e2f3ff;
+  }
+  
+  
+  /* Thunderstorm */
+  
+  .weather-page--stormy {
+    --weather-background:
+      linear-gradient(
+        145deg,
+        #080f1d 0%,
+        #102c4a 50%,
+        #07111f 100%
+      );
+  
+    --weather-card-background:
+      rgba(11, 31, 52, 0.78);
+  
+    --weather-small-card-background:
+      rgba(100, 180, 255, 0.08);
+  
+    --weather-border:
+      rgba(105, 185, 255, 0.3);
+  
+    --weather-accent:
+      #83c9ff;
+  }
+
+  
+  /* ========================================
+     BACK LINK
+     ======================================== */
+  
   .weather-page a {
-    color: #b79cff;
+    color: var(--weather-accent);
     text-decoration: none;
   }
   
@@ -14,7 +252,9 @@
   }
   
   
-  /* Page header */
+  /* ========================================
+     PAGE HEADER
+     ======================================== */
   
   .weather-page > header {
     margin-top: 24px;
@@ -28,11 +268,13 @@
   
   .weather-page > header p {
     margin: 0;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--weather-muted-text);
   }
   
   
-  /* Current weather card */
+  /* ========================================
+     CURRENT WEATHER
+     ======================================== */
   
   .weather-current {
     display: grid;
@@ -41,14 +283,21 @@
     margin-top: 28px;
     padding: 28px;
   
-    border: 1px solid rgba(183, 156, 255, 0.22);
+    border: 1px solid var(--weather-border);
     border-radius: 20px;
   
-    background: rgba(77, 48, 122, 0.18);
+    background: var(--weather-card-background);
+  
+    box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.18);
+  
+    transition:
+      background 500ms ease,
+      border-color 500ms ease;
   }
   
   
-  /* Main current temperature */
+  /* Current temperature */
   
   .weather-current__temperature {
     display: grid;
@@ -56,25 +305,28 @@
   }
   
   .weather-current__temperature span {
-    color: rgba(255, 255, 255, 0.58);
+    color: var(--weather-muted-text);
     font-size: 0.9rem;
   }
   
   .weather-current__temperature strong {
-    color: rgba(255, 255, 255, 0.96);
+    color: var(--weather-text);
     font-size: 2.6rem;
     font-weight: 650;
   }
   
   
-  /* Current weather values */
+  /* Current weather metrics */
   
   .weather-current__metrics {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(130px, 1fr)
-    );
+  
+    grid-template-columns:
+      repeat(
+        auto-fit,
+        minmax(130px, 1fr)
+      );
+  
     gap: 14px;
   }
   
@@ -85,31 +337,37 @@
     min-width: 0;
     padding: 16px;
   
-    border: 1px solid rgba(183, 156, 255, 0.16);
+    border: 1px solid var(--weather-border);
     border-radius: 14px;
   
-    background: rgba(255, 255, 255, 0.025);
+    background:
+      var(--weather-small-card-background);
+  
+    transition:
+      background 500ms ease,
+      border-color 500ms ease;
   }
   
   .weather-metric span {
-    color: rgba(255, 255, 255, 0.58);
+    color: var(--weather-muted-text);
     font-size: 0.82rem;
   }
   
   .weather-metric strong {
     overflow-wrap: anywhere;
   
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--weather-text);
     font-size: 1.15rem;
     font-weight: 600;
   }
   
   
-  /* Forecast section */
+  /* ========================================
+     FORECAST SECTION
+     ======================================== */
   
   .weather-forecast {
     margin-top: 32px;
-    padding: 0;
   }
   
   .weather-forecast__header {
@@ -123,14 +381,14 @@
   .weather-forecast__eyebrow {
     margin: 0;
   
-    color: #b79cff;
+    color: var(--weather-accent);
     font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
   
   
-  /* Horizontally scrollable forecast */
+  /* Horizontal forecast scrolling */
   
   .weather-forecast__grid {
     display: flex;
@@ -144,11 +402,12 @@
   
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+  
     overscroll-behavior: contain;
   
     /*
-     * JavaScript now handles both horizontal
-     * and vertical dragging.
+     * Your custom useTouchScroll hook handles
+     * horizontal and vertical pointer movement.
      */
     touch-action: none;
   
@@ -160,25 +419,52 @@
     display: none;
   }
   
-  .weather-forecast-card {
-    flex: 0 0 200px;
-    box-sizing: border-box;
   
-    scroll-snap-align: start;
-  }
+  /* ========================================
+     FORECAST CARD BASE
+     ======================================== */
   
   .weather-forecast-card {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(73, 55, 105, 0.82),
+        rgba(34, 28, 54, 0.9)
+      );
+  
+    --forecast-card-border:
+      rgba(183, 156, 255, 0.22);
+  
+    --forecast-card-accent:
+      #b79cff;
+  
     flex: 0 0 200px;
   
     box-sizing: border-box;
+    min-width: 0;
     padding: 18px;
   
-    border: 1px solid rgba(183, 156, 255, 0.2);
+    border: 1px solid
+      var(--forecast-card-border);
+  
     border-radius: 18px;
   
-    background: rgba(77, 48, 122, 0.16);
+    background:
+      var(--forecast-card-background);
   
     scroll-snap-align: start;
+  
+    box-shadow:
+      0 12px 25px rgba(0, 0, 0, 0.14);
+  
+    transition:
+      background 300ms ease,
+      border-color 300ms ease,
+      transform 180ms ease;
+  }
+  
+  .weather-forecast-card:hover {
+    transform: translateY(-2px);
   }
   
   .weather-forecast-card h3 {
@@ -187,28 +473,190 @@
   }
   
   
-  /* Forecast temperatures */
+  /* ========================================
+     INDIVIDUAL FORECAST CARD THEMES
+     ======================================== */
+  
+  
+  /* Sunny card */
+  
+  .weather-forecast-card--sunny {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(139, 89, 36, 0.88),
+        rgba(74, 48, 62, 0.92)
+      );
+  
+    --forecast-card-border:
+      rgba(255, 211, 125, 0.4);
+  
+    --forecast-card-accent:
+      #ffd27c;
+  }
+  
+  
+  /* Cloudy card */
+  
+  .weather-forecast-card--cloudy {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(70, 76, 98, 0.9),
+        rgba(42, 45, 64, 0.94)
+      );
+  
+    --forecast-card-border:
+      rgba(200, 210, 230, 0.27);
+  
+    --forecast-card-accent:
+      #cbd2e2;
+  }
+  
+  
+  /* Fog card */
+  
+  .weather-forecast-card--foggy {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(94, 100, 110, 0.86),
+        rgba(53, 58, 69, 0.94)
+      );
+  
+    --forecast-card-border:
+      rgba(225, 230, 238, 0.3);
+  
+    --forecast-card-accent:
+      #e0e4ea;
+  }
+  
+  
+  /* Drizzle card */
+  
+  .weather-forecast-card--drizzly {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(39, 83, 100, 0.9),
+        rgba(26, 48, 67, 0.95)
+      );
+  
+    --forecast-card-border:
+      rgba(134, 205, 225, 0.32);
+  
+    --forecast-card-accent:
+      #8cd4e7;
+  }
+  
+  
+  /* Rain card */
+  
+  .weather-forecast-card--rainy {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(28, 67, 97, 0.92),
+        rgba(16, 31, 50, 0.97)
+      );
+  
+    --forecast-card-border:
+      rgba(100, 190, 235, 0.34);
+  
+    --forecast-card-accent:
+      #74caf3;
+  }
+  
+  
+  /* Snow card */
+  
+  .weather-forecast-card--snowy {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(105, 128, 156, 0.9),
+        rgba(48, 66, 89, 0.95)
+      );
+  
+    --forecast-card-border:
+      rgba(225, 243, 255, 0.38);
+  
+    --forecast-card-accent:
+      #e3f4ff;
+  }
+  
+  
+  /* Thunderstorm card */
+  
+  .weather-forecast-card--stormy {
+  --forecast-card-background:
+    linear-gradient(
+      145deg,
+      rgba(18, 62, 96, 0.95),
+      rgba(7, 22, 39, 0.98)
+    );
+
+  --forecast-card-border:
+    rgba(105, 190, 255, 0.4);
+
+  --forecast-card-accent:
+    #8fd1ff;
+}
+  
+  
+  /* Default/unknown card */
+  
+  .weather-forecast-card--default {
+    --forecast-card-background:
+      linear-gradient(
+        145deg,
+        rgba(73, 55, 105, 0.82),
+        rgba(34, 28, 54, 0.9)
+      );
+  
+    --forecast-card-border:
+      rgba(183, 156, 255, 0.22);
+  
+    --forecast-card-accent:
+      #b79cff;
+  }
+  
+  
+  /* ========================================
+     FORECAST CARD CONTENT
+     ======================================== */
   
   .weather-forecast-card__temperatures {
     display: flex;
     align-items: baseline;
     gap: 10px;
   
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
   
   .weather-forecast-card__temperatures strong {
-    color: rgba(255, 255, 255, 0.96);
+    color: var(--weather-text);
     font-size: 1.8rem;
   }
   
   .weather-forecast-card__temperatures span {
-    color: rgba(255, 255, 255, 0.58);
+    color: var(--weather-muted-text);
     font-size: 1.05rem;
   }
   
   
-  /* Forecast detail rows */
+  /* Forecast condition */
+  
+  .weather-forecast-card__condition {
+    margin: 0 0 15px;
+  
+    color: var(--forecast-card-accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  
+  
+  /* Forecast details */
   
   .weather-forecast-card__details {
     display: grid;
@@ -223,18 +671,20 @@
   
     margin: 0;
   
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--weather-muted-text);
     font-size: 0.82rem;
   }
   
   .weather-forecast-card__details strong {
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--weather-text);
     font-weight: 600;
     text-align: right;
   }
   
   
-  /* Smaller dashboard viewport */
+  /* ========================================
+     RESPONSIVE LAYOUT
+     ======================================== */
   
   @media (max-width: 700px) {
     .weather-page {
@@ -254,19 +704,18 @@
     }
   
     .weather-current__metrics {
-      grid-template-columns: repeat(
-        2,
-        minmax(0, 1fr)
-      );
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
     }
   
-    .weather-forecast__grid {
-      grid-auto-columns: minmax(165px, 72%);
+    .weather-forecast-card {
+      flex-basis: 180px;
     }
   }
   
-  
-  /* Very narrow viewport */
   
   @media (max-width: 420px) {
     .weather-page {
@@ -281,7 +730,7 @@
       grid-template-columns: 1fr;
     }
   
-    .weather-forecast__grid {
-      grid-auto-columns: 88%;
+    .weather-forecast-card {
+      flex-basis: 82%;
     }
   }

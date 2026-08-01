@@ -293,6 +293,10 @@ def fetch_current_weather(location_name: str) -> dict:
             "sunrise",
             "sunset",
         ]),
+        "hourly": ",".join([
+            "weather_code",
+            "precipitation_probability",
+        ]),
 
         "timezone": "auto",
         "forecast_days": 8,
@@ -321,6 +325,10 @@ def fetch_current_weather(location_name: str) -> dict:
         "daily",
         {},
     )
+    hourly = weather_data.get(
+        "hourly",
+        {},
+    )
 
     forecast_dates = daily.get(
         "time",
@@ -340,8 +348,23 @@ def fetch_current_weather(location_name: str) -> dict:
             return None
 
         return values[index]
+    
+    def get_hourly_value(
+    property_name: str,
+    index: int,
+    ):
+        values = hourly.get(
+            property_name,
+            [],
+        )
+
+        if index >= len(values):
+            return None
+
+        return values[index]
 
     forecast = []
+   
 
     for index, forecast_date in enumerate(
         forecast_dates
@@ -393,6 +416,28 @@ def fetch_current_weather(location_name: str) -> dict:
                 index,
             ),
         })
+        
+    hourly_forecast = []
+
+    for index, forecast_time in enumerate(
+        hourly.get("time", [])
+    ):
+        hourly_forecast.append({
+            "time": forecast_time,
+
+            "weather_code": get_hourly_value(
+                "weather_code",
+                index,
+            ),
+
+            "precipitation_probability_percent":
+                get_hourly_value(
+                    "precipitation_probability",
+                    index,
+                ),
+        })
+    
+     
 
     return {
         "location": {
@@ -443,6 +488,7 @@ def fetch_current_weather(location_name: str) -> dict:
         },
 
         "forecast": forecast,
+        "hourly_forecast": hourly_forecast,
     }
         
 def run_power_command(command: str) -> None:
