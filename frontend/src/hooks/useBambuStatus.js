@@ -26,7 +26,7 @@ export default function useBambuStatus() {
       }
     }
     loadBambuStatus();
-    const intervalId = setInterval(loadBambuStatus,5000 );
+    const intervalId = setInterval(loadBambuStatus,5000);
     return () => clearInterval(intervalId);
   },[]);
   return{
