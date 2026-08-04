@@ -1,11 +1,14 @@
 import ApplicationTile from "../components/ApplicationTile";
 import applications from "../data/applications";
 import "./ApplicationsPage.css";
+
 import useWeatherData from "../hooks/useWeatherData";
 import getWeatherCondition from "../utils/getWeatherCondition";
 import useHomeAssistantStatus from "../hooks/useHomeAssistantStatus";
+import useBambuStatus from "../hooks/useBambuStatus";
 
 function ApplicationsPage() {
+  //Weather hook
   const { weatherData, weatherLoading, weatherError } = useWeatherData();
   const weatherCondition = getWeatherCondition(
     weatherData?.current?.weather_code
@@ -18,6 +21,7 @@ function ApplicationsPage() {
     error: weatherError,
   };
 
+  //Home Assistant hook
   const {
     status: homeAssistantStatus,
     loading: homeAssistantLoading,
@@ -29,6 +33,21 @@ function ApplicationsPage() {
     status: homeAssistantStatus?.status ?? null,
     loading: homeAssistantLoading,
     error: homeAssistantError,
+  };
+  //Bambu hook
+  const {
+    status: bambuStatus,
+    loading: bambuLoading,
+    error: bambuError,
+  } = useBambuStatus();
+  const bambuTileData = {
+    available: bambuStatus?.available ?? false,
+    online: bambuStatus?.online ?? false,
+    print_status: bambuStatus?.print_status ?? null,
+    nozzle_temperature: bambuStatus?.nozzle_temperature ?? null,
+    print_progress: bambuStatus?.print_progress ?? null,
+    loading: bambuLoading,
+    error: bambuError,
   };
   return (
     <main className="applications-page">
@@ -49,6 +68,7 @@ function ApplicationsPage() {
             homeAssistant={
               application.id === "home-assistant" ? homeAssistantTileData : null
             }
+            bambu={application.id === "bambu-printer" ? bambuTileData : null}
           />
         ))}
       </section>

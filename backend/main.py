@@ -7,6 +7,7 @@ import re
 import psutil
 import httpx
 import os
+import asyncio
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,6 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR /".env")
 HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL", "").rstrip("/")
 HOME_ASSISTANT_TOKEN = os.getenv("HOME_ASSISTANT_TOKEN", "")
+BAMBU_ONLINE_ENTITY = os.getenv("BAMBU_ONLINE_ENTITY")
+BAMBU_PRINT_STATUS_ENTITY = os.getenv("BAMBU_PRINT_STATUS_ENTITY")
+BAMBU_NOZZLE_TEMPERATURE_ENTITY = os.getenv(
+    "BAMBU_NOZZLE_TEMPERATURE_ENTITY"
+)
+BAMBU_PRINT_PROGRESS_ENTITY = os.getenv(
+    "BAMBU_PRINT_PROGRESS_ENTITY"
+)
 
 app = FastAPI(title="Personal Pi Dashboard API")
 
@@ -51,6 +60,29 @@ def fetch_json(url: str, service_name: str) -> dict:
             detail=f"{service_name} is currently unavailable",
         ) from request_error
         
+"""Home Assistant Bambu helper functions"""
+async def get_home_assistant_entity(
+    client: httpx.AsyncClient,
+    entity_id: str,
+    headers: dict,
+) ->dict:
+    """Load the current state of one Home Assistant entity"""
+    response = await client.get(
+        f"{HOME_ASSISTANT_URL}/api/states/{entity_id}",
+        headers=headers,
+    )
+    response.raise_for_status()
+    return response.json()
+def parse_number(value: str) -> float | None:
+    """Convert a Home Assistant state to a number when possible"""
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+    
+
+ 
+"""Weather helper functions"""       
 def parse_weather_location(location_value: str) -> dict:
     """Split a setting such as 'Strassburg, Kärnten, AT'."""
 
@@ -512,7 +544,7 @@ def run_power_command(command: str) -> None:
         check=False,
         timeout=15,
     )
-
+"""System helper fuctions"""
 def get_pi_model() -> str:
     """Read the Raspberry Pi model name."""
 
@@ -726,7 +758,7 @@ def is_process_running(search_text: str) -> bool:
 
     return False
 
-
+"""API GET"""
 @app.get("/")
 def read_root():
     return {
@@ -858,7 +890,78 @@ async def get_home_assistant_status():
             "authenticated": False,
             "status": "unreachable",
         }
+@app.get("/api/home-assistant/bambu-printer")
+async def get_bambu_status():
+    """Return basic Bambu Lab printer information."""
 
+    entity_ids = [
+        BAMBU_ONLINE_ENTITY,
+        BAMBU_PRINT_STATUS_ENTITY,
+        BAMBU_NOZZLE_TEMPERATURE_ENTITY,
+        BAMBU_PRINT_PROGRESS_ENTITY,
+    ]
+
+    if not all(entity_ids):
+        return {
+            "available": False,
+            "error": "One or more Bambu entity IDs are missing",
+        }
+
+    headers = {
+        "Authorization": f"Bearer {HOME_ASSISTANT_TOKEN}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            (
+                online_entity,
+                print_status_entity,
+                nozzle_temperature_entity,
+                print_progress_entity,
+            ) = await asyncio.gather(
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_ONLINE_ENTITY,
+                    headers,
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_PRINT_STATUS_ENTITY,
+                    headers,
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_NOZZLE_TEMPERATURE_ENTITY,
+                    headers,
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_PRINT_PROGRESS_ENTITY,
+                    headers,
+                ),
+            )
+
+        return {
+            "available": True,
+            "online": online_entity["state"] == "on",
+            "print_status": print_status_entity["state"],
+            "nozzle_temperature": parse_number(
+                nozzle_temperature_entity["state"]
+            ),
+            "print_progress": parse_number(
+                print_progress_entity["state"]
+            ),
+        }
+
+    except httpx.HTTPError as error:
+        return {
+            "available": False,
+            "online": False,
+            "error": str(error),
+        }
+
+"""API POST"""
 @app.post("/api/system/restart", status_code=202)
 def restart_raspberry_pi(
     background_tasks: BackgroundTasks,

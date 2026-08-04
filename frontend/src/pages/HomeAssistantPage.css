@@ -1,0 +1,66 @@
+.home-assistant-page {
+    padding: 32px;
+  }
+  
+  .home-assistant-page__header {
+    margin-bottom: 24px;
+  }
+  
+  .home-assistant-page__eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+  }
+  
+  .home-assistant-page__header h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  .home-assistant-status-card {
+    max-width: 520px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .home-assistant-status-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .home-assistant-status-card__indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #888;
+  }
+  
+  .home-assistant-status-card__indicator--online {
+    background: #31c66b;
+  }
+  
+  .home-assistant-status-card__indicator--offline {
+    background: #e05252;
+  }
+  
+  .home-assistant-status-card__indicator--checking {
+    background: #d6a938;
+  }
+  
+  .home-assistant-status-card h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  
+  .home-assistant-status-card p {
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.8;
+  }

@@ -12,6 +12,8 @@ import ApplicationDetailPage from "./pages/ApplicationDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 import useTouchScroll from "./hooks/useTouchScroll";
 import WeatherPage from "./pages/WeatherPage";
+import HomeAssistantPage from "./pages/HomeAssistantPage";
+import BambuPage from "./pages/BambuPage";
 
 function App() {
   const pageContentRef = useRef(null);
@@ -27,6 +29,8 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/applications" element={<ApplicationsPage />} />
             <Route path="/applications/weather" element={<WeatherPage />} />
+            <Route path="/applications/home-assistant"element={<HomeAssistantPage/>}/>
+            <Route path="/applications/bambu-printer"element={<BambuPage/>}/>
             <Route
               path="/applications/:applicationId"
               element={<ApplicationDetailPage />}

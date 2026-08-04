@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import "./ApplicationTile.css";
 
-function ApplicationTile({ application, weather, homeAssistant }) {
+function ApplicationTile({ application, weather, homeAssistant, bambu }) {
   let tileClassName = "application-tile";
   let tileIcon = application.shortLabel;
   let tileDescription = application.description;
@@ -44,6 +44,24 @@ function ApplicationTile({ application, weather, homeAssistant }) {
     } else {
       tileDescription = "Home Assistant is online and connected.";
       tileStatus = "Online";
+    }
+  }
+  // Bambu Lab tile
+  if (bambu) {
+    tileIcon = "3D";
+
+    if (bambu.loading) {
+      tileDescription = "Checking Bambu printer connection...";
+      tileStatus = "Checking";
+    } else if (bambu.error || !bambu.available || !bambu.online) {
+      tileDescription = "The Bambu printer is currently unavailable.";
+      tileStatus = "Offline";
+    } else {
+      tileDescription = `Nozzle: ${
+        bambu.nozzle_temperature ?? "--"
+      } °C · Progress: ${bambu.print_progress ?? "--"} %`;
+
+      tileStatus = bambu.print_status ?? "Online";
     }
   }
   return (
