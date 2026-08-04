@@ -28,9 +28,9 @@ const applications = [
       status: "Planned",
     },
     {
-      id: "projects",
+      id: "project",
       name: "Projects",
-      shortLabel: "PR",
+      shortLabel: "GH",
       description: "Overview of personal software and hardware projects. Maybe add a GIT connection",
       status: "Planned",
     },

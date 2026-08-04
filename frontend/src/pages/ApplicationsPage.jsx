@@ -6,6 +6,7 @@ import useWeatherData from "../hooks/useWeatherData";
 import getWeatherCondition from "../utils/getWeatherCondition";
 import useHomeAssistantStatus from "../hooks/useHomeAssistantStatus";
 import useBambuStatus from "../hooks/useBambuStatus";
+import useGitHubRepositories from "../hooks/useGitHubRepositories";
 
 function ApplicationsPage() {
   //Weather hook
@@ -49,6 +50,20 @@ function ApplicationsPage() {
     loading: bambuLoading,
     error: bambuError,
   };
+  //GitHub hook
+  const {
+    data: githubData,
+    loading: githubLoading,
+    error: githubError,
+  } = useGitHubRepositories();
+  const githubTileData = {
+    available: githubData?.available ?? false,
+    username: githubData?.username ?? null,
+    repositoryCount: githubData?.repository_count ?? 0,
+    repositories: githubData?.repositories ?? [],
+    loading: githubLoading,
+    error: githubError,
+  };
   return (
     <main className="applications-page">
       <header className="applications-page__header">
@@ -69,6 +84,7 @@ function ApplicationsPage() {
               application.id === "home-assistant" ? homeAssistantTileData : null
             }
             bambu={application.id === "bambu-printer" ? bambuTileData : null}
+            github={application.id === "project" ? githubTileData : null}
           />
         ))}
       </section>
