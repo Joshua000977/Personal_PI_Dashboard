@@ -3,6 +3,7 @@ import applications from "../data/applications";
 import "./ApplicationsPage.css";
 import useWeatherData from "../hooks/useWeatherData";
 import getWeatherCondition from "../utils/getWeatherCondition";
+import useHomeAssistantStatus from "../hooks/useHomeAssistantStatus";
 
 function ApplicationsPage() {
   const { weatherData, weatherLoading, weatherError } = useWeatherData();
@@ -15,6 +16,19 @@ function ApplicationsPage() {
     apparent_temperature: weatherData?.current?.apparent_temperature_celsius,
     loading: weatherLoading,
     error: weatherError,
+  };
+
+  const {
+    status: homeAssistantStatus,
+    loading: homeAssistantLoading,
+    error: homeAssistantError,
+  } = useHomeAssistantStatus();
+  const homeAssistantTileData = {
+    online: homeAssistantStatus?.online ?? false,
+    authenticated: homeAssistantStatus?.authenticated ?? false,
+    status: homeAssistantStatus?.status ?? null,
+    loading: homeAssistantLoading,
+    error: homeAssistantError,
   };
   return (
     <main className="applications-page">
@@ -29,9 +43,12 @@ function ApplicationsPage() {
       <section className="applications-grid">
         {applications.map((application) => (
           <ApplicationTile
+            key={application.id}
             application={application}
             weather={application.id === "weather" ? weatherTileData : null}
-            key={application.id}
+            homeAssistant={
+              application.id === "home-assistant" ? homeAssistantTileData : null
+            }
           />
         ))}
       </section>

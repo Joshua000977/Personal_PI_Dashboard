@@ -2,28 +2,50 @@ import { Link } from "react-router-dom";
 
 import "./ApplicationTile.css";
 
-function ApplicationTile({ application, weather }) {
-  const tileClassName = weather
-    ? `application-tile weather-tile weather-tile--${weather.condition.theme}`
-    : "application-tile";
+function ApplicationTile({ application, weather, homeAssistant }) {
+  let tileClassName = "application-tile";
+  let tileIcon = application.shortLabel;
+  let tileDescription = application.description;
+  let tileStatus = application.status;
 
-  const tileIcon = weather ? weather.condition.icon : application.shortLabel;
+  // Weather tile
+  if (weather) {
+    tileClassName = `application-tile weather-tile weather-tile--${weather.condition.theme}`;
+    tileIcon = weather.condition.icon;
 
-  const tileDescription = weather
-    ? weather.loading
-      ? "Loading weather..."
-      : weather.error
-      ? "Weather unavailable"
-      : `${weather.temperature ?? "--"} °C · Feels like: ${
-          weather.apparent_temperature ?? "--"
-        } °C · ${weather.condition.label}`
-    : application.description;
+    if (weather.loading) {
+      tileDescription = "Loading weather...";
+      tileStatus = "Loading";
+    } else if (weather.error) {
+      tileDescription = "Weather unavailable";
+      tileStatus = "Offline";
+    } else {
+      tileDescription = `${weather.temperature ?? "--"} °C · Feels like: ${
+        weather.apparent_temperature ?? "--"
+      } °C · ${weather.condition.label}`;
 
-  const tileStatus = weather
-    ? weather.error
-      ? "Offline"
-      : "Live"
-    : application.status;
+      tileStatus = "Live";
+    }
+  }
+
+  // Home Assistant tile
+  if (homeAssistant) {
+    tileIcon = "HA";
+
+    if (homeAssistant.loading) {
+      tileDescription = "Checking Home Assistant connection...";
+      tileStatus = "Checking";
+    } else if (homeAssistant.error || !homeAssistant.online) {
+      tileDescription = "Home Assistant is currently unavailable.";
+      tileStatus = "Offline";
+    } else if (!homeAssistant.authenticated) {
+      tileDescription = "Home Assistant is online, but authentication failed.";
+      tileStatus = "Authentication error";
+    } else {
+      tileDescription = "Home Assistant is online and connected.";
+      tileStatus = "Online";
+    }
+  }
   return (
     <Link
       className={tileClassName}

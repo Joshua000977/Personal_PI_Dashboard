@@ -2,16 +2,23 @@ import platform
 import socket
 import subprocess
 import time
-from pathlib import Path
-from urllib import error, request, parse
 import json
 import re
-
 import psutil
+import httpx
+import os
+
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
+from pathlib import Path
+from urllib import error, request, parse
+from dotenv import load_dotenv
 from config import FRONTEND_URL
+
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR /".env")
+HOME_ASSISTANT_URL = os.getenv("HOME_ASSISTANT_URL", "").rstrip("/")
+HOME_ASSISTANT_TOKEN = os.getenv("HOME_ASSISTANT_TOKEN", "")
 
 app = FastAPI(title="Personal Pi Dashboard API")
 
@@ -802,6 +809,55 @@ def get_weather_information(
     return fetch_current_weather(location)
 
 
+@app.get("/api/home-assistant/status")
+async def get_home_assistant_status():
+    """Check whether Home Assistant is reachable and authenticated."""
+
+    if not HOME_ASSISTANT_URL or not HOME_ASSISTANT_TOKEN:
+        return {
+            "online": False,
+            "authenticated": False,
+            "status": "configuration_missing",
+        }
+
+    headers = {
+        "Authorization": f"Bearer {HOME_ASSISTANT_TOKEN}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(
+                f"{HOME_ASSISTANT_URL}/api/",
+                headers=headers,
+            )
+
+        if response.status_code == 200:
+            return {
+                "online": True,
+                "authenticated": True,
+                "status": "online",
+            }
+
+        if response.status_code in (401, 403):
+            return {
+                "online": True,
+                "authenticated": False,
+                "status": "authentication_failed",
+            }
+
+        return {
+            "online": True,
+            "authenticated": False,
+            "status": "api_error",
+        }
+
+    except httpx.RequestError:
+        return {
+            "online": False,
+            "authenticated": False,
+            "status": "unreachable",
+        }
 
 @app.post("/api/system/restart", status_code=202)
 def restart_raspberry_pi(
