@@ -27,8 +27,8 @@ export default function useHomeAssistantStatus() {
       } catch (requestError) {
         console.error(
           "Failed to load Home Assistant status:",
-          requestError,
-        );
+          requestError ,
+        ); 
 
         setError(requestError.message);
         setStatus(null);
