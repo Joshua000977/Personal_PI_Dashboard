@@ -11,7 +11,7 @@ const applications = [
       name: "Spotify",
       shortLabel: "SP",
       description: "Music playback and device controls.",
-      status: "Planned",
+      status: "Live",
     },
     {
       id: "weather",

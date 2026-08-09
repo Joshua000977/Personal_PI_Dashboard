@@ -15,6 +15,7 @@ import WeatherPage from "./pages/WeatherPage";
 import HomeAssistantPage from "./pages/HomeAssistantPage";
 import BambuPage from "./pages/BambuPage";
 import ProjectsPage from "./pages/ProjectsPage";
+import SpotifyPage from "./pages/SpotifyPage";
 
 function App() {
   const pageContentRef = useRef(null);
@@ -36,6 +37,7 @@ function App() {
             />
             <Route path="/applications/bambu-printer" element={<BambuPage />} />
             <Route path="/applications/project" element={<ProjectsPage />} />
+            <Route path="/applications/spotify" element={<SpotifyPage/>} />
             <Route
               path="/applications/:applicationId"
               element={<ApplicationDetailPage />}

@@ -8,6 +8,7 @@ function ApplicationTile({
   homeAssistant,
   bambu,
   github,
+  spotify,
 }) {
   let tileClassName = "application-tile";
   let tileIcon = application.shortLabel;
@@ -95,6 +96,29 @@ function ApplicationTile({
       }
 
       tileStatus = "Live";
+    }
+  }
+  //Spotify Tile
+  if (spotify) {
+    tileIcon = "SP";
+
+    if (spotify.loading) {
+      tileDescription = "Loading Spotify playback...";
+      tileStatus = "Loading";
+    } else if (spotify.error || !spotify.available) {
+      tileDescription = "Spotify is currently unavailable.";
+      tileStatus = "Offline";
+    } else if (!spotify.authenticated) {
+      tileDescription = "Spotify is not connected.";
+      tileStatus = "Connect";
+    } else if (!spotify.track) {
+      tileDescription = "Nothing is currently playing.";
+      tileStatus = "Idle";
+    } else {
+      const artists = spotify.track.artists.join(", ");
+
+      tileDescription = `${spotify.track.name} · ${artists}`;
+      tileStatus = spotify.isPlaying ? "Playing" : "Paused";
     }
   }
 

@@ -7,6 +7,7 @@ import getWeatherCondition from "../utils/getWeatherCondition";
 import useHomeAssistantStatus from "../hooks/useHomeAssistantStatus";
 import useBambuStatus from "../hooks/useBambuStatus";
 import useGitHubRepositories from "../hooks/useGitHubRepositories";
+import useSpotifyData from "../hooks/useSpotifyData";
 
 function ApplicationsPage() {
   //Weather hook
@@ -64,6 +65,21 @@ function ApplicationsPage() {
     loading: githubLoading,
     error: githubError,
   };
+  //Spotify hook
+  const{
+    data: spotifyData,
+    loading  : spotifyLoading,
+    error: spotifyError,
+  }=useSpotifyData();
+  const spotifyTileData = {
+    available: spotifyData?.available ?? false,
+    authenticated: spotifyData?.authenticated ?? false,
+    isPlaying: spotifyData?.is_playing ?? false,
+    track: spotifyData?.track ?? null,
+    device: spotifyData?.device ?? null,
+    loading: spotifyLoading,
+    error: spotifyError,
+  };
   return (
     <main className="applications-page">
       <header className="applications-page__header">
@@ -85,6 +101,7 @@ function ApplicationsPage() {
             }
             bambu={application.id === "bambu-printer" ? bambuTileData : null}
             github={application.id === "project" ? githubTileData : null}
+            spotify={application.id === "spotify" ? spotifyTileData : null}
           />
         ))}
       </section>
