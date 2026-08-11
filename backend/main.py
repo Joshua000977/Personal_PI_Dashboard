@@ -631,7 +631,48 @@ def get_spotify_access_token() -> str | None:
         return None
 
     return token_data.get("access_token")
-      
+def send_spotify_player_command(
+    endpoint: str,
+    method: str,
+) -> dict:
+    """Send a playback command to the active Spotify device."""
+
+    access_token = get_spotify_access_token()
+
+    if not access_token:
+        return {
+            "success": False,
+            "error": "Spotify is not authenticated",
+        }
+
+    try:
+        response = requests.request(
+            method=method,
+            url=f"https://api.spotify.com/v1/me/player/{endpoint}",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+            },
+            timeout=10,
+        )
+    except requests.RequestException:
+        return {
+            "success": False,
+            "error": "Spotify could not be reached",
+        }
+
+    # Successful Spotify player commands normally return 204 No Content.
+    if response.ok:
+        return {
+            "success": True,
+            "command": endpoint,
+        }
+
+    return {
+        "success": False,
+        "error": "Spotify rejected the playback command",
+        "spotify_status": response.status_code,
+    }
+"""System helper fuctions"""
 def run_power_command(command: str) -> None:
     """Execute an approved Raspberry Pi power command."""
 
@@ -646,7 +687,7 @@ def run_power_command(command: str) -> None:
         check=False,
         timeout=15,
     )
-"""System helper fuctions"""
+
 def get_pi_model() -> str:
     """Read the Raspberry Pi model name."""
 
@@ -1303,6 +1344,7 @@ def get_spotify_status():
         } if device else None,
     }
 
+
 """API POST"""
 @app.post("/api/system/restart", status_code=202)
 def restart_raspberry_pi(
@@ -1334,4 +1376,22 @@ def shutdown_raspberry_pi(
         "action": "shutdown",
         "message": "Raspberry Pi shutdown scheduled",
     }
+@app.post("/api/spotify/player/previous")
+def spotify_previous():
+    return send_spotify_player_command("previous", "POST")
+
+
+@app.post("/api/spotify/player/next")
+def spotify_next():
+    return send_spotify_player_command("next", "POST")
+
+
+@app.post("/api/spotify/player/pause")
+def spotify_pause():
+    return send_spotify_player_command("pause", "PUT")
+
+
+@app.post("/api/spotify/player/play")
+def spotify_play():
+    return send_spotify_player_command("play", "PUT")
     

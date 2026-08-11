@@ -14,6 +14,7 @@ function ApplicationTile({
   let tileIcon = application.shortLabel;
   let tileDescription = application.description;
   let tileStatus = application.status;
+  let tileStyle = {};
 
   // Weather tile
   if (weather) {
@@ -101,6 +102,15 @@ function ApplicationTile({
   //Spotify Tile
   if (spotify) {
     tileIcon = "SP";
+    tileClassName += " spotify-tile";
+
+    if (spotify.track?.image_url) {
+      tileClassName += " spotify-tile--has-cover";
+
+      tileStyle = {
+        "--spotify-cover": `url("${spotify.track.image_url}")`,
+      };
+    }
 
     if (spotify.loading) {
       tileDescription = "Loading Spotify playback...";
@@ -125,6 +135,7 @@ function ApplicationTile({
   return (
     <Link
       className={tileClassName}
+      style={tileStyle}
       to={`/applications/${application.id}`}
       aria-label={`Open ${application.name}`}
     >

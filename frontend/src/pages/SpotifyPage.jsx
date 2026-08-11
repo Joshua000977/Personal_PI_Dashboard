@@ -1,6 +1,9 @@
 import useSpotifyData from "../hooks/useSpotifyData";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SpotifyPage.css";
+
+const API_BASE_URL = `http://${window.location.hostname}:8000`;
 
 function formatTime(milliseconds) {
   if (!milliseconds) {
@@ -16,6 +19,32 @@ function formatTime(milliseconds) {
 
 function SpotifyPage() {
   const { data: spotify, loading, error } = useSpotifyData();
+  const [controlLoading, setControlLoading] = useState(false);
+  const [controlError, setControlError] = useState(null);
+  async function sendSpotifyCommand(command) {
+    try {
+      setControlLoading(true);
+      setControlError(null);
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/spotify/player/${command}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error ?? "Spotify command failed");
+      }
+    } catch (requestError) {
+      console.error("Spotify control failed:", requestError);
+      setControlError(requestError.message);
+    } finally {
+      setControlLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -54,16 +83,7 @@ function SpotifyPage() {
   return (
     <main className="spotify-page">
       <Link to="/applications">← Back to applications</Link>
-      <header className="spotify-page__header">
-        <p className="spotify-page__eyebrow">Connected service</p>
-
-        <h1>Spotify</h1>
-
-        <p className="spotify-page__subtitle">
-          Current playback and connected device information.
-        </p>
-      </header>
-
+     
       <section className="spotify-player">
         <div>
           {track?.image_url ? (
@@ -91,7 +111,43 @@ function SpotifyPage() {
           {track?.album && (
             <p className="spotify-player__album">{track.album}</p>
           )}
+          <div className="spotify-controls">
+            <button
+              className="spotify-controls__button"
+              type="button"
+              disabled={controlLoading || !track}
+              onClick={() => sendSpotifyCommand("previous")}
+              aria-label="Previous track"
+            >
+              ⏮
+            </button>
 
+            <button
+              className="spotify-controls__button spotify-controls__button--primary"
+              type="button"
+              disabled={controlLoading || !track}
+              onClick={() =>
+                sendSpotifyCommand(spotify.is_playing ? "pause" : "play")
+              }
+              aria-label={spotify.is_playing ? "Pause" : "Play"}
+            >
+              {spotify.is_playing ? "⏸" : "▶"}
+            </button>
+
+            <button
+              className="spotify-controls__button"
+              type="button"
+              disabled={controlLoading || !track}
+              onClick={() => sendSpotifyCommand("next")}
+              aria-label="Next track"
+            >
+              ⏭
+            </button>
+          </div>
+
+          {controlError && (
+            <p className="spotify-controls__error">{controlError}</p>
+          )}
           <div className="spotify-progress">
             <div className="spotify-progress__bar">
               <div

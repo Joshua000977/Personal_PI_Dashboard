@@ -129,12 +129,25 @@
   
   .spotify-information-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     margin-top: 24px;
+  }
+  .spotify-information-card:last-child {
+    grid-column: 1 / -1;
+  }
+  
+  .spotify-information-card__value {
+    display: block;
+    overflow: visible;
+    color: #f5f1ff;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   
   .spotify-information-card {
+    min-width: 0;
     padding: 18px;
     border: 1px solid #382d4d;
     border-radius: 16px;
@@ -151,12 +164,6 @@
     text-transform: uppercase;
   }
   
-  .spotify-information-card__value {
-    overflow: hidden;
-    color: #f5f1ff;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
   
   .spotify-page__message {
     padding: 32px;
@@ -189,4 +196,59 @@
     .spotify-information-grid {
       grid-template-columns: 1fr;
     }
+  }
+  .spotify-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+  }
+  
+  .spotify-controls__button {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid #4b3b65;
+    border-radius: 50%;
+    background: #241a34;
+    color: #f5f1ff;
+    font: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+  
+  .spotify-controls__button:hover:not(:disabled) {
+    border-color: #a979e5;
+    background: #35244d;
+    transform: translateY(-2px);
+  }
+  
+  .spotify-controls__button--primary {
+    width: 60px;
+    height: 60px;
+    border: 0;
+    background: #a979e5;
+    color: #120c1b;
+    font-size: 1.45rem;
+  }
+  
+  .spotify-controls__button--primary:hover:not(:disabled) {
+    background: #bf91f2;
+  }
+  
+  .spotify-controls__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .spotify-controls__error {
+    margin: 10px 0 0;
+    color: #eab3c8;
+    font-size: 0.85rem;
   }

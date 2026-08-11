@@ -219,3 +219,41 @@
   background: rgba(0, 0, 0, 0.18);
   color: rgba(255, 255, 255, 0.9);
 }
+.spotify-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotify-tile--has-cover {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(11, 7, 18, 0.28) 0%,
+      rgba(11, 7, 18, 0.58) 45%,
+      rgba(11, 7, 18, 0.94) 100%
+    ),
+    var(--spotify-cover);
+  background-position: center;
+  background-size: cover;
+  border-color: rgba(184, 153, 237, 0.55);
+}
+
+.spotify-tile--has-cover .application-tile__header,
+.spotify-tile--has-cover .application-tile__content,
+.spotify-tile--has-cover .application-tile__status {
+  position: relative;
+  z-index: 1;
+}
+
+.spotify-tile--has-cover .application-tile__title,
+.spotify-tile--has-cover .application-tile__content {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+.spotify-tile--has-cover .application-tile__status {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(10, 7, 16, 0.55);
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+}
