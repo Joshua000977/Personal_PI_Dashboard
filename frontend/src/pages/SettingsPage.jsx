@@ -56,7 +56,7 @@ function SettingsPage() {
 
     updateSetting("temperatureWarningLimit", newLimit);
   }
-
+ 
   function handleWeatherLocationModeChange(event) {
     updateSetting("weatherLocationMode", event.target.value);
   }
