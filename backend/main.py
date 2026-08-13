@@ -634,6 +634,7 @@ def get_spotify_access_token() -> str | None:
 def send_spotify_player_command(
     endpoint: str,
     method: str,
+    params: dict | None = None,
 ) -> dict:
     """Send a playback command to the active Spotify device."""
 
@@ -652,6 +653,7 @@ def send_spotify_player_command(
             headers={
                 "Authorization": f"Bearer {access_token}",
             },
+            params= params,
             timeout=10,
         )
     except requests.RequestException:
@@ -1394,4 +1396,12 @@ def spotify_pause():
 @app.post("/api/spotify/player/play")
 def spotify_play():
     return send_spotify_player_command("play", "PUT")
+
+@app.post("/api/spotify/player/shuffle")
+def spotify_shuffle(state: bool):
+    return send_spotify_player_command(
+        endpoint="shuffle",
+        method="PUT",
+        params={"state": str(state).lower()},
+    )
     

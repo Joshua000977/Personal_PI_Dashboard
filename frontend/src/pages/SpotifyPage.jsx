@@ -21,13 +21,13 @@ function SpotifyPage() {
   const { data: spotify, loading, error } = useSpotifyData();
   const [controlLoading, setControlLoading] = useState(false);
   const [controlError, setControlError] = useState(null);
-  async function sendSpotifyCommand(command) {
+  async function sendSpotifyCommand(command, query = "") {
     try {
       setControlLoading(true);
       setControlError(null);
 
       const response = await fetch(
-        `${API_BASE_URL}/api/spotify/player/${command}`,
+        `${API_BASE_URL}/api/spotify/player/${command}${query}`,
         {
           method: "POST",
         }
@@ -83,7 +83,7 @@ function SpotifyPage() {
   return (
     <main className="spotify-page">
       <Link to="/applications">← Back to applications</Link>
-     
+
       <section className="spotify-player">
         <div>
           {track?.image_url ? (
@@ -143,8 +143,21 @@ function SpotifyPage() {
             >
               ⏭
             </button>
-          </div>
 
+            <button
+              className="spotify-controls__button"
+              type="button"
+              disabled={controlLoading || !track}
+              onClick={() =>
+                sendSpotifyCommand("shuffle", `?state=${!spotify.shuffle}`)
+              }
+              aria-label={
+                spotify.shuffle ? "Disable shuffle" : "Enable shuffle"
+              }
+            >
+              ⇄
+            </button>
+          </div>
           {controlError && (
             <p className="spotify-controls__error">{controlError}</p>
           )}
