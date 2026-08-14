@@ -252,3 +252,8 @@
     color: #eab3c8;
     font-size: 0.85rem;
   }
+  .spotify-controls__button--active {
+    border-color: #a979e5;
+    background: #493166;
+    color: #cba5ff;
+  }

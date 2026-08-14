@@ -29,6 +29,45 @@ BAMBU_ONLINE_ENTITY = os.getenv("BAMBU_ONLINE_ENTITY")
 BAMBU_PRINT_STATUS_ENTITY = os.getenv("BAMBU_PRINT_STATUS_ENTITY")
 BAMBU_NOZZLE_TEMPERATURE_ENTITY = os.getenv("BAMBU_NOZZLE_TEMPERATURE_ENTITY")
 BAMBU_PRINT_PROGRESS_ENTITY = os.getenv("BAMBU_PRINT_PROGRESS_ENTITY")
+BAMBU_BED_TEMPERATURE_ENTITY = os.getenv(
+    "BAMBU_BED_TEMPERATURE_ENTITY"
+)
+BAMBU_BED_TARGET_TEMPERATURE_ENTITY = os.getenv(
+    "BAMBU_BED_TARGET_TEMPERATURE_ENTITY"
+)
+BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY = os.getenv(
+    "BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY"
+)
+
+BAMBU_CURRENT_LAYER_ENTITY = os.getenv(
+    "BAMBU_CURRENT_LAYER_ENTITY"
+)
+BAMBU_TOTAL_LAYER_COUNT_ENTITY = os.getenv(
+    "BAMBU_TOTAL_LAYER_COUNT_ENTITY"
+)
+BAMBU_REMAINING_TIME_ENTITY = os.getenv(
+    "BAMBU_REMAINING_TIME_ENTITY"
+)
+BAMBU_TASK_NAME_ENTITY = os.getenv(
+    "BAMBU_TASK_NAME_ENTITY"
+)
+
+BAMBU_PRINT_BED_TYPE_ENTITY = os.getenv(
+    "BAMBU_PRINT_BED_TYPE_ENTITY"
+)
+BAMBU_NOZZLE_SIZE_ENTITY = os.getenv(
+    "BAMBU_NOZZLE_SIZE_ENTITY"
+)
+BAMBU_NOZZLE_TYPE_ENTITY = os.getenv(
+    "BAMBU_NOZZLE_TYPE_ENTITY"
+)
+
+BAMBU_COVER_IMAGE_ENTITY = os.getenv(
+    "BAMBU_COVER_IMAGE_ENTITY"
+)
+BAMBU_CAMERA_ENTITY = os.getenv(
+    "BAMBU_CAMERA_ENTITY"
+)
 
 GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
@@ -1040,17 +1079,32 @@ async def get_home_assistant_status():
 async def get_bambu_status():
     """Return basic Bambu Lab printer information."""
 
-    entity_ids = [
-        BAMBU_ONLINE_ENTITY,
-        BAMBU_PRINT_STATUS_ENTITY,
-        BAMBU_NOZZLE_TEMPERATURE_ENTITY,
-        BAMBU_PRINT_PROGRESS_ENTITY,
+    entity_ids = {
+        "online":BAMBU_ONLINE_ENTITY,
+        "print_status":BAMBU_PRINT_STATUS_ENTITY,
+        "nozzle_temp":BAMBU_NOZZLE_TEMPERATURE_ENTITY,
+        "print_progress":BAMBU_PRINT_PROGRESS_ENTITY,
+        "bed_temp":BAMBU_BED_TEMPERATURE_ENTITY,
+        "bed_target_temp":BAMBU_BED_TARGET_TEMPERATURE_ENTITY,
+        "nozzle_target_temp":BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY,
+        "current_layer":BAMBU_CURRENT_LAYER_ENTITY,
+        "total_layer":BAMBU_TOTAL_LAYER_COUNT_ENTITY,
+        "remaining_time":BAMBU_REMAINING_TIME_ENTITY,
+        "task_name":BAMBU_TASK_NAME_ENTITY,
+        "bed_type":BAMBU_PRINT_BED_TYPE_ENTITY,
+        "nozzle_size":BAMBU_NOZZLE_SIZE_ENTITY,
+        "nozzly_type":BAMBU_NOZZLE_TYPE_ENTITY,
+    }
+    missing_entities =[
+        name
+        for name, entity_id in entity_ids.items()
+        if not entity_id
     ]
-
-    if not all(entity_ids):
+    if missing_entities:
         return {
             "available": False,
             "error": "One or more Bambu entity IDs are missing",
+            "missing_entities":missing_entities,
         }
 
     headers = {
@@ -1065,6 +1119,16 @@ async def get_bambu_status():
                 print_status_entity,
                 nozzle_temperature_entity,
                 print_progress_entity,
+                bed_temperature_entity,
+                bed_target_temperature_entity,
+                nozzle_target_temperature_entity,
+                current_layer_entity,
+                total_layer_count_entity,
+                remaining_time_entity,
+                task_name_entity,
+                print_bed_type_entity,
+                nozzle_size_entity,
+                nozzle_type_entity,
             ) = await asyncio.gather(
                 get_home_assistant_entity(
                     client,
@@ -1086,18 +1150,98 @@ async def get_bambu_status():
                     BAMBU_PRINT_PROGRESS_ENTITY,
                     headers,
                 ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_BED_TEMPERATURE_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_BED_TARGET_TEMPERATURE_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_CURRENT_LAYER_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_TOTAL_LAYER_COUNT_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_REMAINING_TIME_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_TASK_NAME_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_PRINT_BED_TYPE_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_NOZZLE_SIZE_ENTITY,
+                    headers
+                ),
+                get_home_assistant_entity(
+                    client,
+                    BAMBU_NOZZLE_TYPE_ENTITY,
+                    headers
+                ),
             )
 
         return {
             "available": True,
             "online": online_entity["state"] == "on",
             "print_status": print_status_entity["state"],
-            "nozzle_temperature": parse_number(
-                nozzle_temperature_entity["state"]
-            ),
             "print_progress": parse_number(
                 print_progress_entity["state"]
             ),
+            "task_name": task_name_entity["state"],
+            "temperatures":{
+                "nozzle": parse_number(
+                    nozzle_temperature_entity["state"]
+                ),
+                "nozzle_target": parse_number(
+                    nozzle_target_temperature_entity["state"]
+                ),
+                "bed": parse_number(
+                    bed_temperature_entity["state"]
+                ),
+                "bed_target":parse_number(
+                    bed_target_temperature_entity["state"]
+                ),
+            },
+            "layers":{
+                "current":parse_number(
+                    current_layer_entity["state"]
+                ),
+                "total":parse_number(
+                    total_layer_count_entity["state"]
+                ),
+            },
+            "remaining_time_hours":parse_number(
+                remaining_time_entity["state"]
+            ),
+            "hardware":{
+                "bed_type": print_bed_type_entity["state"],
+                "nozzle_size":parse_number(
+                    nozzle_size_entity["state"]
+                ),
+                "nozzle_type":nozzle_type_entity["state"],
+            },
         }
 
     except httpx.HTTPError as error:
