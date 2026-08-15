@@ -1,7 +1,11 @@
-import useBambuStatus from "../hooks/useBambuStatus";
-import { Link, matchRoutes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
+import useBambuStatus from "../hooks/useBambuStatus";
 import "./BambuPage.css";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ?? `http://${window.location.hostname}:8000`;
 
 function formatRemainingTime(hours) {
   const numericHours = Number(hours);
@@ -22,6 +26,66 @@ function BambuPage() {
     loading: bambuLoading,
     error: bambuError,
   } = useBambuStatus();
+  const [activeControl, setActiveControl] = useState(null);
+  const [controlError, setControlError] = useState("");
+  const [selectedPrintingSpeed, setSelectedPrintingSpeed] = useState("");
+
+  async function runPrinterControl(action) {
+    setActiveControl(action);
+    setControlError("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/home-assistant/bambu-printer/control/${action}`,
+        {
+          method: "POST",
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        throw new Error(errorData.detail ?? "The printer command failed");
+      }
+    } catch (error) {
+      setControlError(error.message);
+    } finally {
+      setActiveControl(null);
+    }
+  }
+  async function changePrintingSpeed(event) {
+    const selectedSpeed = event.target.value;
+
+    setSelectedPrintingSpeed(selectedSpeed);
+    setActiveControl("printing_speed");
+    setControlError("");
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/home-assistant/bambu-printer/printing-speed`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            option: selectedSpeed,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        throw new Error(errorData.detail ?? "Changing the speed failed");
+      }
+    } catch (error) {
+      setControlError(error.message);
+      setSelectedPrintingSpeed(printingSpeed);
+    } finally {
+      setActiveControl(null);
+    }
+  }
 
   let connectionText = "Checking";
   let connectionDescription = "Checking the Bambu printer connection...";
@@ -154,10 +218,20 @@ function BambuPage() {
   const controls = bambuStatus?.controls ?? {};
 
   const printingSpeed = controls.printing_speed ?? "Unknown";
-  const forceRefreshState = controls.force_refresh ?? "Unknown";
-  const pauseState = controls.pause ?? "Unknown";
-  const resumeState = controls.resume ?? "Unknown";
-  const stopState = controls.stop ?? "Unknown";
+  useEffect(() => {
+    if (printingSpeed !== "Unknown" && printingSpeed !== "unavailable") {
+      setSelectedPrintingSpeed(printingSpeed);
+    }
+  }, [printingSpeed]);
+
+  const printingSpeedOptions = controls.printing_speed_options ?? [];
+  const printingSpeedAvailable = printingSpeed !== "unavailable";
+
+  const pauseAvailable = controls.pause !== "unavailable";
+
+  const resumeAvailable = controls.resume !== "unavailable";
+
+  const stopAvailable = controls.stop !== "unavailable";
 
   // Print and model files
   const files = bambuStatus?.files ?? {};
@@ -548,88 +622,111 @@ function BambuPage() {
 
               <div className="bambu-printer-card__details">
                 <div className="bambu-detail">
-                  <span className="bambu-detail__label">Printing speed</span>
+                  <label
+                    className="bambu-detail__label"
+                    htmlFor="printing-speed"
+                  >
+                    Printing speed
+                  </label>
 
-                  <strong className="bambu-detail__value">
-                    {printingSpeed}
-                  </strong>
+                  <select
+                    id="printing-speed"
+                    value={selectedPrintingSpeed || printingSpeed}
+                    onChange={changePrintingSpeed}
+                    disabled={
+                      activeControl !== null ||
+                      !printingSpeedAvailable ||
+                      printingSpeedOptions.length === 0
+                    }
+                  >
+                    {printingSpeedOptions.length === 0 ? (
+                      <option value={printingSpeed}>{printingSpeed}</option>
+                    ) : (
+                      printingSpeedOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))
+                    )}
+                  </select>
                 </div>
 
                 <div className="bambu-detail">
                   <span className="bambu-detail__label">Force refresh</span>
 
-                  <strong className="bambu-detail__value">
-                    {forceRefreshState}
-                  </strong>
+                  <button
+                    type="button"
+                    onClick={() => runPrinterControl("refresh")}
+                    disabled={activeControl !== null}
+                  >
+                    {activeControl === "refresh" ? "Refreshing..." : "Refresh"}
+                  </button>
                 </div>
 
                 <div className="bambu-detail">
-                  <span className="bambu-detail__label">Pause</span>
+                  <span className="bambu-detail__label">Pause print</span>
 
-                  <strong className="bambu-detail__value">{pauseState}</strong>
+                  <button
+                    type="button"
+                    onClick={() => runPrinterControl("pause")}
+                    disabled={activeControl !== null || !pauseAvailable}
+                  >
+                    {activeControl === "pause" ? "Pausing..." : "Pause"}
+                  </button>
                 </div>
 
                 <div className="bambu-detail">
-                  <span className="bambu-detail__label">Resume</span>
+                  <span className="bambu-detail__label">Resume print</span>
 
-                  <strong className="bambu-detail__value">{resumeState}</strong>
+                  <button
+                    type="button"
+                    onClick={() => runPrinterControl("resume")}
+                    disabled={activeControl !== null || !resumeAvailable}
+                  >
+                    {activeControl === "resume" ? "Resuming..." : "Resume"}
+                  </button>
                 </div>
 
                 <div className="bambu-detail">
-                  <span className="bambu-detail__label">Stop</span>
+                  <span className="bambu-detail__label">Stop print</span>
 
-                  <strong className="bambu-detail__value">{stopState}</strong>
-                </div>
-                <div className="bambu-detail">
-                  <span className="bambu-detail__label">Camera</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const shouldStop = window.confirm(
+                        "Do you really want to stop the current print?"
+                      );
 
-                  <strong className="bambu-detail__value">
-                    {cameraEnabled ? "Enabled" : "Disabled"}
-                  </strong>
+                      if (shouldStop) {
+                        runPrinterControl("stop");
+                      }
+                    }}
+                    disabled={activeControl !== null || !stopAvailable}
+                  >
+                    {activeControl === "stop" ? "Stopping..." : "Stop"}
+                  </button>
                 </div>
 
                 <div className="bambu-detail">
                   <span className="bambu-detail__label">Chamber light</span>
 
-                  <strong className="bambu-detail__value">
-                    {chamberLightEnabled ? "On" : "Off"}
-                  </strong>
+                  <button
+                    type="button"
+                    onClick={() => runPrinterControl("light_toggle")}
+                    disabled={activeControl !== null}
+                  >
+                    {activeControl === "light_toggle"
+                      ? "Changing..."
+                      : chamberLightEnabled
+                      ? "Turn off"
+                      : "Turn on"}
+                  </button>
                 </div>
               </div>
-            </section>
 
-            <section className="bambu-printer-card">
-              <div className="bambu-printer-card__header">
-                <div>
-                  <p className="bambu-printer-card__label">Print files</p>
-
-                  <h2>Files and model</h2>
-                </div>
-              </div>
-
-              <div className="bambu-printer-card__details">
-                <div className="bambu-detail">
-                  <span className="bambu-detail__label">G-code filename</span>
-
-                  <strong className="bambu-detail__value">
-                    {gcodeFileName}
-                  </strong>
-                </div>
-
-                <div className="bambu-detail">
-                  <span className="bambu-detail__label">G-code download</span>
-
-                  <strong className="bambu-detail__value">
-                    {gcodeDownload}
-                  </strong>
-                </div>
-
-                <div className="bambu-detail">
-                  <span className="bambu-detail__label">Model file</span>
-
-                  <strong className="bambu-detail__value">{modelFile}</strong>
-                </div>
-              </div>
+              {controlError && (
+                <p className="bambu-control-error">{controlError}</p>
+              )}
             </section>
           </>
         )}

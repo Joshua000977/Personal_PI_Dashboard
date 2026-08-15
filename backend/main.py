@@ -11,7 +11,9 @@ import asyncio
 import requests
 import secrets
 
+
 from fastapi import BackgroundTasks, FastAPI, HTTPException
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from urllib import error, request, parse
@@ -265,6 +267,38 @@ async def get_home_assistant_entity(
     )
     response.raise_for_status()
     return response.json()
+
+async def call_home_assistant_service(
+    domain:str,
+    service:str,
+    entity_id:str,
+    service_data:dict | None=None,
+) -> None:
+    """Call a Home Assistant service"""
+    if not entity_id:
+        raise HTTPException(
+            status_code=503,
+            detail="The Home Assistant entity ID is missing",
+        )
+    headers={
+        "Authorization": f"Bearer {HOME_ASSISTANT_TOKEN}",
+        "Content-Type":"application/json",
+    }
+    payload={
+        "entity_id":entity_id,
+    }
+    if service_data:
+        payload.update(service_data)
+        
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        response = await client.post(
+            f"{HOME_ASSISTANT_URL}/api/services/{domain}/{service}",
+            headers=headers,
+            json=payload,
+        )
+    response.raise_for_status()
+            
+
 def parse_number(value: str) -> float | None:
     """Convert a Home Assistant state to a number when possible"""
     try:
@@ -1438,6 +1472,10 @@ async def get_bambu_status():
             "controls": {
                 "printing_speed":
                     entities["printing_speed"]["state"],
+                "printing_speed_options":
+                    entities["printing_speed"]
+                    .get("attributes", {})
+                    .get("options", []),
                 "force_refresh":
                     entities["force_refresh"]["state"],
                 "pause": entities["pause"]["state"],
@@ -1460,6 +1498,35 @@ async def get_bambu_status():
             "online": False,
             "error": str(error),
         }
+
+BAMBU_CONTROL_ACTIONS = {
+    "refresh": (
+        "button",
+        "press",
+        BAMBU_FORCE_REFRESH_ENTITY,
+    ),
+    "pause": (
+        "button",
+        "press",
+        BAMBU_PAUSE_ENTITY,
+    ),
+    "resume": (
+        "button",
+        "press",
+        BAMBU_RESUME_ENTITY,
+    ),
+    "stop": (
+        "button",
+        "press",
+        BAMBU_STOP_ENTITY,
+    ),
+    "light_toggle": (
+        "light",
+        "toggle",
+        BAMBU_CHAMBER_LIGHT_ENTITY,
+    ),
+}
+
 @app.get("/api/github/repositories")
 async def get_github_repositories():
     """Return the user's most recently updated public GitHub repositories."""
@@ -1758,4 +1825,66 @@ def spotify_shuffle(state: bool):
         method="PUT",
         params={"state": str(state).lower()},
     )
+
+@app.post("/api/home-assistant/bambu-printer/control/{action}")
+async def control_bambu_printer(action: str):
+    """Run an allowed Bambu printer control action."""
+
+    control = BAMBU_CONTROL_ACTIONS.get(action)
+
+    if not control:
+        raise HTTPException(
+            status_code=400,
+            detail="Unknown Bambu control action",
+        )
+
+    domain, service, entity_id = control
+
+    try:
+        await call_home_assistant_service(
+            domain=domain,
+            service=service,
+            entity_id=entity_id,
+        )
+
+        return {
+            "success": True,
+            "action": action,
+        }
+
+    except httpx.HTTPError as error:
+        raise HTTPException(
+            status_code=502,
+            detail="Home Assistant rejected the control action",
+        ) from error
+class BambuPrintingSpeedRequest(BaseModel):
+    option: str
+
+
+@app.post("/api/home-assistant/bambu-printer/printing-speed")
+async def set_bambu_printing_speed(
+    request_data: BambuPrintingSpeedRequest,
+):
+    """Change the Bambu printer speed through Home Assistant."""
+
+    try:
+        await call_home_assistant_service(
+            domain="select",
+            service="select_option",
+            entity_id=BAMBU_PRINTING_SPEED_ENTITY,
+            service_data={
+                "option": request_data.option,
+            },
+        )
+
+        return {
+            "success": True,
+            "printing_speed": request_data.option,
+        }
+
+    except httpx.HTTPError as error:
+        raise HTTPException(
+            status_code=502,
+            detail="Home Assistant rejected the printing speed",
+        ) from error
     
