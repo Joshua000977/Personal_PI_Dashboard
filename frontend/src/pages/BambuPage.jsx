@@ -1,7 +1,20 @@
 import useBambuStatus from "../hooks/useBambuStatus";
-import { Link } from "react-router-dom";
+import { Link, matchRoutes } from "react-router-dom";
 
 import "./BambuPage.css";
+
+function formatRemainingTime(hours) {
+  const numericHours = Number(hours);
+  if (!Number.isFinite || numericHours <= 0) {
+    return "--";
+  }
+
+  const totalMinutes = Math.round(numericHours * 60);
+  const fullHours = Math.round(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${fullHours}h ${minutes}m`;
+}
 
 function BambuPage() {
   const {
@@ -34,9 +47,26 @@ function BambuPage() {
   }
 
   const printStatus = bambuStatus?.print_status ?? "Unknown";
-  const nozzleTemperature = bambuStatus?.nozzle_temperature ?? "--";
-
   const printProgress = bambuStatus?.print_progress ?? 0;
+  const taskName = bambuStatus?.task_name ?? "Unknown";
+
+  const temperatures = bambuStatus?.temperatures ?? {};
+  const layers = bambuStatus?.layers ?? {};
+  const hardware = bambuStatus?.hardware ?? {};
+
+  const nozzleTemperature = temperatures.nozzle ?? "--";
+  const nozzleTargetTemperature = temperatures.nozzle_target ?? "--";
+  const bedTemperature = temperatures.bed ?? "--";
+  const bedTargetTemperature = temperatures.bed_target ?? "--";
+
+  const currentLayer = layers.current ?? "--";
+  const totalLayers = layers.total ?? "--";
+
+  const remainingTimeHours = bambuStatus?.remaining_time_hours ?? 0;
+
+  const bedType = hardware.bed_type ?? "Unknown";
+  const nozzleSize = hardware.nozzle_size ?? "--";
+  const nozzleType = hardware.nozzle_type ?? "Unknown";
 
   const safeProgress = Math.min(100, Math.max(0, Number(printProgress) || 0));
 
@@ -82,6 +112,7 @@ function BambuPage() {
                 </p>
 
                 <h2>{printStatus}</h2>
+                <p>{taskName === "unknown" ? "No active print" : taskName}</p>
               </div>
 
               <span className="bambu-printer-card__printer-icon">3D</span>
@@ -90,23 +121,51 @@ function BambuPage() {
             <div className="bambu-printer-card__details">
               <div className="bambu-detail">
                 <span className="bambu-detail__label">Print status</span>
-
                 <strong className="bambu-detail__value">{printStatus}</strong>
               </div>
 
               <div className="bambu-detail">
-                <span className="bambu-detail__label">Nozzle temperature</span>
-
+                <span className="bambu-detail__label">Remaining time</span>
                 <strong className="bambu-detail__value">
-                  {nozzleTemperature} °C
+                  {formatRemainingTime(remainingTimeHours)}
+                </strong>
+              </div>
+
+              <div className="bambu-detail">
+                <span className="bambu-detail__label">Layer</span>
+                <strong className="bambu-detail__value">
+                  {currentLayer} / {totalLayers}
+                </strong>
+              </div>
+
+              <div className="bambu-detail">
+                <span className="bambu-detail__label">Nozzle temperature</span>
+                <strong className="bambu-detail__value">
+                  {nozzleTemperature} °C / {nozzleTargetTemperature} °C
+                </strong>
+              </div>
+
+              <div className="bambu-detail">
+                <span className="bambu-detail__label">Bed temperature</span>
+                <strong className="bambu-detail__value">
+                  {bedTemperature} °C / {bedTargetTemperature} °C
                 </strong>
               </div>
 
               <div className="bambu-detail">
                 <span className="bambu-detail__label">Print progress</span>
+                <strong className="bambu-detail__value">{safeProgress}%</strong>
+              </div>
 
+              <div className="bambu-detail">
+                <span className="bambu-detail__label">Print bed</span>
+                <strong className="bambu-detail__value">{bedType}</strong>
+              </div>
+
+              <div className="bambu-detail">
+                <span className="bambu-detail__label">Nozzle</span>
                 <strong className="bambu-detail__value">
-                  {safeProgress} %
+                  {nozzleSize} mm · {nozzleType}
                 </strong>
               </div>
             </div>

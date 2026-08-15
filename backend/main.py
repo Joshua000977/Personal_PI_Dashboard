@@ -68,6 +68,137 @@ BAMBU_COVER_IMAGE_ENTITY = os.getenv(
 BAMBU_CAMERA_ENTITY = os.getenv(
     "BAMBU_CAMERA_ENTITY"
 )
+BAMBU_PRINTER_NAME_ENTITY = os.getenv(
+    "BAMBU_PRINTER_NAME_ENTITY"
+)
+BAMBU_WIFI_SIGNAL_ENTITY = os.getenv(
+    "BAMBU_WIFI_SIGNAL_ENTITY"
+)
+
+BAMBU_PRINT_TYPE_ENTITY = os.getenv(
+    "BAMBU_PRINT_TYPE_ENTITY"
+)
+BAMBU_EXTRUDER_FILAMENT_ENTITY = os.getenv(
+    "BAMBU_EXTRUDER_FILAMENT_ENTITY"
+)
+BAMBU_PRINT_LENGTH_ENTITY = os.getenv(
+    "BAMBU_PRINT_LENGTH_ENTITY"
+)
+BAMBU_PRINT_WEIGHT_ENTITY = os.getenv(
+    "BAMBU_PRINT_WEIGHT_ENTITY"
+)
+BAMBU_PRINTABLE_OBJECTS_ENTITY = os.getenv(
+    "BAMBU_PRINTABLE_OBJECTS_ENTITY"
+)
+BAMBU_TOTAL_USAGE_ENTITY = os.getenv(
+    "BAMBU_TOTAL_USAGE_ENTITY"
+)
+
+BAMBU_CURRENT_STAGE_ENTITY = os.getenv(
+    "BAMBU_CURRENT_STAGE_ENTITY"
+)
+
+BAMBU_END_TIME_ENTITY = os.getenv(
+    "BAMBU_END_TIME_ENTITY"
+)
+BAMBU_START_TIME_ENTITY = os.getenv(
+    "BAMBU_START_TIME_ENTITY"
+)
+
+BAMBU_CAMERA_SWITCH_ENTITY = os.getenv(
+    "BAMBU_CAMERA_SWITCH_ENTITY"
+)
+BAMBU_IMAGE_SENSOR_CAMERA_SWITCH_ENTITY = os.getenv(
+    "BAMBU_IMAGE_SENSOR_CAMERA_SWITCH_ENTITY"
+)
+
+BAMBU_AMS_ONLINE_ENTITY = os.getenv(
+    "BAMBU_AMS_ONLINE_ENTITY"
+)
+BAMBU_AMS_HUMIDITY_ENTITY = os.getenv(
+    "BAMBU_AMS_HUMIDITY_ENTITY"
+)
+BAMBU_AMS_HUMIDITY_INDEX_ENTITY = os.getenv(
+    "BAMBU_AMS_HUMIDITY_INDEX_ENTITY"
+)
+BAMBU_AMS_TEMPERATURE_ENTITY = os.getenv(
+    "BAMBU_AMS_TEMPERATURE_ENTITY"
+)
+BAMBU_AMS_TRAY1_ENTITY = os.getenv(
+    "BAMBU_AMS_TRAY1_ENTITY"
+)
+BAMBU_AMS_TRAY2_ENTITY = os.getenv(
+    "BAMBU_AMS_TRAY2_ENTITY"
+)
+BAMBU_AMS_TRAY3_ENTITY = os.getenv(
+    "BAMBU_AMS_TRAY3_ENTITY"
+)
+BAMBU_AMS_TRAY4_ENTITY = os.getenv(
+    "BAMBU_AMS_TRAY4_ENTITY"
+)
+BAMBU_AMS_ACTIVE_TRAY_ENTITY = os.getenv(
+    "BAMBU_AMS_ACTIVE_TRAY_ENTITY"
+)
+
+BAMBU_EXTERNAL_SPOOL_ACTIVE_ENTITY = os.getenv(
+    "BAMBU_EXTERNAL_SPOOL_ACTIVE_ENTITY"
+)
+BAMBU_EXTERNAL_SPOOL_FILAMENT_ENTITY = os.getenv(
+    "BAMBU_EXTERNAL_SPOOL_FILAMENT_ENTITY"
+)
+
+BAMBU_ERROR_ENTITY = os.getenv(
+    "BAMBU_ERROR_ENTITY"
+)
+
+BAMBU_CHAMBER_FAN_ENTITY = os.getenv(
+    "BAMBU_CHAMBER_FAN_ENTITY"
+)
+BAMBU_AUX_FAN_ENTITY = os.getenv(
+    "BAMBU_AUX_FAN_ENTITY"
+)
+BAMBU_COOLING_FAN_ENTITY = os.getenv(
+    "BAMBU_COOLING_FAN_ENTITY"
+)
+BAMBU_CHAMBER_FAN_SPEED_ENTITY = os.getenv(
+    "BAMBU_CHAMBER_FAN_SPEED_ENTITY"
+)
+BAMBU_AUX_FAN_SPEED_ENTITY = os.getenv(
+    "BAMBU_AUX_FAN_SPEED_ENTITY"
+)
+BAMBU_COOLING_FAN_SPEED_ENTITY = os.getenv(
+    "BAMBU_COOLING_FAN_SPEED_ENTITY"
+)
+
+BAMBU_CHAMBER_LIGHT_ENTITY = os.getenv(
+    "BAMBU_CHAMBER_LIGHT_ENTITY"
+)
+
+BAMBU_PRINTING_SPEED_ENTITY = os.getenv(
+    "BAMBU_PRINTING_SPEED_ENTITY"
+)
+BAMBU_FORCE_REFRESH_ENTITY = os.getenv(
+    "BAMBU_FORCE_REFRESH_ENTITY"
+)
+BAMBU_PAUSE_ENTITY = os.getenv(
+    "BAMBU_PAUSE_ENTITY"
+)
+BAMBU_RESUME_ENTITY = os.getenv(
+    "BAMBU_RESUME_ENTITY"
+)
+BAMBU_STOP_ENTITY = os.getenv(
+    "BAMBU_STOP_ENTITY"
+)
+
+BAMBU_GCODE_FILE_DOWNLOAD_ENTITY = os.getenv(
+    "BAMBU_GCODE_FILE_DOWNLOAD_ENTITY"
+)
+BAMBU_GCODE_FILE_NAME_ENTITY = os.getenv(
+    "BAMBU_GCODE_FILE_NAME_ENTITY"
+)
+BAMBU_MODEL_ENTITY = os.getenv(
+    "BAMBU_MODEL_ENTITY"
+)
 
 GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
@@ -1082,11 +1213,11 @@ async def get_bambu_status():
     entity_ids = {
         "online":BAMBU_ONLINE_ENTITY,
         "print_status":BAMBU_PRINT_STATUS_ENTITY,
-        "nozzle_temp":BAMBU_NOZZLE_TEMPERATURE_ENTITY,
+        "nozzle_temperature":BAMBU_NOZZLE_TEMPERATURE_ENTITY,
         "print_progress":BAMBU_PRINT_PROGRESS_ENTITY,
-        "bed_temp":BAMBU_BED_TEMPERATURE_ENTITY,
-        "bed_target_temp":BAMBU_BED_TARGET_TEMPERATURE_ENTITY,
-        "nozzle_target_temp":BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY,
+        "bed_temperature":BAMBU_BED_TEMPERATURE_ENTITY,
+        "bed_target_temperature":BAMBU_BED_TARGET_TEMPERATURE_ENTITY,
+        "nozzle_target_temperature":BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY,
         "current_layer":BAMBU_CURRENT_LAYER_ENTITY,
         "total_layer":BAMBU_TOTAL_LAYER_COUNT_ENTITY,
         "remaining_time":BAMBU_REMAINING_TIME_ENTITY,
@@ -1094,6 +1225,46 @@ async def get_bambu_status():
         "bed_type":BAMBU_PRINT_BED_TYPE_ENTITY,
         "nozzle_size":BAMBU_NOZZLE_SIZE_ENTITY,
         "nozzly_type":BAMBU_NOZZLE_TYPE_ENTITY,
+        "printer_name":BAMBU_PRINTER_NAME_ENTITY,
+        "wifi_signal":BAMBU_WIFI_SIGNAL_ENTITY,
+        "print_type":BAMBU_PRINT_TYPE_ENTITY,
+        "extruder_filament":BAMBU_EXTRUDER_FILAMENT_ENTITY,
+        "print_length":BAMBU_PRINT_LENGTH_ENTITY,
+        "print_weight":BAMBU_PRINT_WEIGHT_ENTITY,
+        "printable_objects":BAMBU_PRINTABLE_OBJECTS_ENTITY,
+        "total_usage":BAMBU_TOTAL_USAGE_ENTITY,
+        "current_stage":BAMBU_CURRENT_STAGE_ENTITY,
+        "end_time":BAMBU_END_TIME_ENTITY,
+        "start_time":BAMBU_START_TIME_ENTITY,
+        "camera_switch":BAMBU_IMAGE_SENSOR_CAMERA_SWITCH_ENTITY,
+        "ams_online":BAMBU_AMS_ONLINE_ENTITY,
+        "ams_temperature":BAMBU_AMS_TEMPERATURE_ENTITY,
+        "ams_humidity":BAMBU_AMS_HUMIDITY_ENTITY,
+        "ams_humidity_index":BAMBU_AMS_HUMIDITY_INDEX_ENTITY,
+        "ams_tray1":BAMBU_AMS_TRAY1_ENTITY,
+        "ams_tray2":BAMBU_AMS_TRAY2_ENTITY,
+        "ams_tray3":BAMBU_AMS_TRAY3_ENTITY,
+        "ams_tray4":BAMBU_AMS_TRAY4_ENTITY,
+        "ams_active_try":BAMBU_AMS_ACTIVE_TRAY_ENTITY,
+        "external_spool":BAMBU_EXTERNAL_SPOOL_ACTIVE_ENTITY,
+        "external_spool_filament":BAMBU_EXTERNAL_SPOOL_FILAMENT_ENTITY,
+        "print_error":BAMBU_ERROR_ENTITY,
+        "chamber_fan":BAMBU_CHAMBER_FAN_ENTITY,
+        "aux_fan":BAMBU_AUX_FAN_ENTITY,
+        "cooling_fan":BAMBU_COOLING_FAN_ENTITY,
+        "chamber_fan_speed":BAMBU_CHAMBER_FAN_SPEED_ENTITY,
+        "aux_fan_speed":BAMBU_AUX_FAN_SPEED_ENTITY,
+        "cooling_fan_speed":BAMBU_COOLING_FAN_SPEED_ENTITY,
+        "chamber_light":BAMBU_CHAMBER_LIGHT_ENTITY,
+        "printing_speed":BAMBU_PRINTING_SPEED_ENTITY,
+        "force_refresh":BAMBU_FORCE_REFRESH_ENTITY,
+        "pause":BAMBU_PAUSE_ENTITY,
+        "resume":BAMBU_RESUME_ENTITY,
+        "stop":BAMBU_STOP_ENTITY,
+        "gcode_file_download":BAMBU_GCODE_FILE_DOWNLOAD_ENTITY,
+        "gcode_file_name":BAMBU_GCODE_FILE_NAME_ENTITY,
+        "model_file":BAMBU_MODEL_ENTITY,
+        
     }
     missing_entities =[
         name
@@ -1114,133 +1285,172 @@ async def get_bambu_status():
 
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            (
-                online_entity,
-                print_status_entity,
-                nozzle_temperature_entity,
-                print_progress_entity,
-                bed_temperature_entity,
-                bed_target_temperature_entity,
-                nozzle_target_temperature_entity,
-                current_layer_entity,
-                total_layer_count_entity,
-                remaining_time_entity,
-                task_name_entity,
-                print_bed_type_entity,
-                nozzle_size_entity,
-                nozzle_type_entity,
-            ) = await asyncio.gather(
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_ONLINE_ENTITY,
-                    headers,
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_PRINT_STATUS_ENTITY,
-                    headers,
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_NOZZLE_TEMPERATURE_ENTITY,
-                    headers,
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_PRINT_PROGRESS_ENTITY,
-                    headers,
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_BED_TEMPERATURE_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_BED_TARGET_TEMPERATURE_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_NOZZLE_TARGET_TEMPERATURE_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_CURRENT_LAYER_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_TOTAL_LAYER_COUNT_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_REMAINING_TIME_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_TASK_NAME_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_PRINT_BED_TYPE_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_NOZZLE_SIZE_ENTITY,
-                    headers
-                ),
-                get_home_assistant_entity(
-                    client,
-                    BAMBU_NOZZLE_TYPE_ENTITY,
-                    headers
-                ),
+            entity_results = await asyncio.gather(
+                *[
+                    get_home_assistant_entity(
+                        client,
+                        entity_id,
+                        headers,
+                    )
+                    for entity_id in entity_ids.values()
+                ]
             )
+
+        entities = dict(zip(entity_ids.keys(), entity_results))
 
         return {
             "available": True,
-            "online": online_entity["state"] == "on",
-            "print_status": print_status_entity["state"],
+            "online": entities["online"]["state"] == "on",
+            "print_status": entities["print_status"]["state"],
             "print_progress": parse_number(
-                print_progress_entity["state"]
+                entities["print_progress"]["state"]
             ),
-            "task_name": task_name_entity["state"],
-            "temperatures":{
+            "task_name": entities["task_name"]["state"],
+
+            "printer": {
+                "name": entities["printer_name"]["state"],
+                "wifi_signal": parse_number(
+                    entities["wifi_signal"]["state"]
+                ),
+                "total_usage": parse_number(
+                    entities["total_usage"]["state"]
+                ),
+            },
+
+            "temperatures": {
                 "nozzle": parse_number(
-                    nozzle_temperature_entity["state"]
+                    entities["nozzle_temperature"]["state"]
                 ),
                 "nozzle_target": parse_number(
-                    nozzle_target_temperature_entity["state"]
+                    entities["nozzle_target_temperature"]["state"]
                 ),
                 "bed": parse_number(
-                    bed_temperature_entity["state"]
+                    entities["bed_temperature"]["state"]
                 ),
-                "bed_target":parse_number(
-                    bed_target_temperature_entity["state"]
-                ),
-            },
-            "layers":{
-                "current":parse_number(
-                    current_layer_entity["state"]
-                ),
-                "total":parse_number(
-                    total_layer_count_entity["state"]
+                "bed_target": parse_number(
+                    entities["bed_target_temperature"]["state"]
                 ),
             },
-            "remaining_time_hours":parse_number(
-                remaining_time_entity["state"]
+
+            "layers": {
+                "current": parse_number(
+                    entities["current_layer"]["state"]
+                ),
+                "total": parse_number(
+                    entities["total_layer"]["state"]
+                ),
+            },
+
+            "remaining_time_hours": parse_number(
+                entities["remaining_time"]["state"]
             ),
-            "hardware":{
-                "bed_type": print_bed_type_entity["state"],
-                "nozzle_size":parse_number(
-                    nozzle_size_entity["state"]
+
+            "time": {
+                "start": entities["start_time"]["state"],
+                "end": entities["end_time"]["state"],
+            },
+
+            "hardware": {
+                "bed_type": entities["bed_type"]["state"],
+                "nozzle_size": parse_number(
+                    entities["nozzle_size"]["state"]
                 ),
-                "nozzle_type":nozzle_type_entity["state"],
+                "nozzle_type": entities["nozzly_type"]["state"],
+            },
+
+            "print_details": {
+                "type": entities["print_type"]["state"],
+                "current_stage": entities["current_stage"]["state"],
+                "extruder_filament_present":
+                    entities["extruder_filament"]["state"] == "on",
+                "length": parse_number(
+                    entities["print_length"]["state"]
+                ),
+                "weight": parse_number(
+                    entities["print_weight"]["state"]
+                ),
+                "printable_objects": entities[
+                    "printable_objects"
+                ]["state"],
+                "error": entities["print_error"]["state"] == "on",
+            },
+
+            "camera": {
+                "enabled": entities["camera_switch"]["state"] == "on",
+            },
+
+            "ams": {
+                "online": entities["ams_online"]["state"] == "on",
+                "temperature": parse_number(
+                    entities["ams_temperature"]["state"]
+                ),
+                "humidity": parse_number(
+                    entities["ams_humidity"]["state"]
+                ),
+                "humidity_index": parse_number(
+                    entities["ams_humidity_index"]["state"]
+                ),
+                "active_tray": entities["ams_active_try"]["state"],
+                "trays": {
+                    "tray_1": entities["ams_tray1"]["state"],
+                    "tray_2": entities["ams_tray2"]["state"],
+                    "tray_3": entities["ams_tray3"]["state"],
+                    "tray_4": entities["ams_tray4"]["state"],
+                },
+            },
+
+            "external_spool": {
+                "active":
+                    entities["external_spool"]["state"] == "on",
+                "filament":
+                    entities["external_spool_filament"]["state"],
+            },
+
+            "fans": {
+                "chamber": {
+                    "enabled":
+                        entities["chamber_fan"]["state"] == "on",
+                    "speed": parse_number(
+                        entities["chamber_fan_speed"]["state"]
+                    ),
+                },
+                "auxiliary": {
+                    "enabled":
+                        entities["aux_fan"]["state"] == "on",
+                    "speed": parse_number(
+                        entities["aux_fan_speed"]["state"]
+                    ),
+                },
+                "cooling": {
+                    "enabled":
+                        entities["cooling_fan"]["state"] == "on",
+                    "speed": parse_number(
+                        entities["cooling_fan_speed"]["state"]
+                    ),
+                },
+            },
+
+            "lights": {
+                "chamber":
+                    entities["chamber_light"]["state"] == "on",
+            },
+
+            "controls": {
+                "printing_speed":
+                    entities["printing_speed"]["state"],
+                "force_refresh":
+                    entities["force_refresh"]["state"],
+                "pause": entities["pause"]["state"],
+                "resume": entities["resume"]["state"],
+                "stop": entities["stop"]["state"],
+            },
+
+            "files": {
+                "gcode_download":
+                    entities["gcode_file_download"]["state"],
+                "gcode_name":
+                    entities["gcode_file_name"]["state"],
+                "model": entities["model_file"]["state"],
             },
         }
 
