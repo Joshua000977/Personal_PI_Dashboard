@@ -1,4 +1,4 @@
-function BambuFileDetails({ fileDetails }) {
+function BambuFileDetails({ fileDetails = {} }) {
   // Print and model files
 
   const gcodeDownload = fileDetails.gcode_download ?? "Unknown";
@@ -25,7 +25,7 @@ function BambuFileDetails({ fileDetails }) {
         <div className="bambu-detail">
           <span className="bambu-detail__label">Model File</span>
 
-          <strong className="bambu-detail__value">{modelFile} h</strong>
+          <strong className="bambu-detail__value">{modelFile}</strong>
         </div>
       </div>
     </section>

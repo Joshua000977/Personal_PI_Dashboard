@@ -1,4 +1,4 @@
-function BambuPrinterStatus({ printerStatus }) {
+function BambuPrinterStatus({ printerStatus = {} }) {
   const printStatus = printerStatus?.print_status ?? "Unknown";
   const printProgress = printerStatus?.print_progress ?? 0;
   const taskName = printerStatus?.task_name ?? "Unknown";

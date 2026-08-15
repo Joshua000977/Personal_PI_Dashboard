@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import useBambuStatus from "../hooks/useBambuStatus";
@@ -14,18 +13,6 @@ import BambuCamera from "../components/bambu/BambuCamera";
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ?? `http://${window.location.hostname}:8000`;
 
-function formatRemainingTime(hours) {
-  const numericHours = Number(hours);
-  if (!Number.isFinite(numericHours) || numericHours <= 0) {
-    return "--";
-  }
-
-  const totalMinutes = Math.round(numericHours * 60);
-  const fullHours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return `${fullHours}h ${minutes}m`;
-}
 
 function BambuPage() {
   const {
@@ -99,7 +86,7 @@ function BambuPage() {
               amsDetails={bambuStatus.ams}
               externalSpoolDetails={bambuStatus.external_spool}
             />
-            <BambuPrintDetails printDetails={bambuStatus.print_details} />
+            <BambuPrintDetails printDetails={bambuStatus} />
             <BambuFans fanDetails={bambuStatus.fans} />
             <BambuControls
               controlDetails={bambuStatus.controls}

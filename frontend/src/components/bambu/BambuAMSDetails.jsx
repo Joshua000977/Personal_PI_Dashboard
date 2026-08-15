@@ -1,4 +1,4 @@
-function BambuAMS({ amsDetails, externalSpoolDetails }) {
+function BambuAMS({ amsDetails = {}, externalSpoolDetails ={} }) {
 
   const amsTrays = amsDetails.trays ?? {};
 

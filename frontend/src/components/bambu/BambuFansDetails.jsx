@@ -1,5 +1,4 @@
-function BambuFans({ fanDetails }) {
- 
+function BambuFans({ fanDetails = {} }) {
   const chamberFan = fanDetails.chamber ?? {};
   const auxiliaryFan = fanDetails.auxiliary ?? {};
   const coolingFan = fanDetails.cooling ?? {};

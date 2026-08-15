@@ -1,4 +1,4 @@
-function BambuCamera({ cameraDetails }) {
+function BambuCamera({ cameraDetails = {} }) {
   const cameraEnabled = cameraDetails.enabled ?? false;
   return(
     <section className="bambu-printer-card">

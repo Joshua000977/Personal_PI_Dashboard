@@ -3,7 +3,6 @@ import { useRef } from "react";
 
 import Sidebar from "./components/Sidebar";
 import DashboardPage from "./pages/DashboardPage";
-import PlaceholderPage from "./pages/PlaceholderPage";
 import "./App.css";
 import SystemPage from "./pages/SystemPage";
 import StoragePage from "./pages/StoragePage";
