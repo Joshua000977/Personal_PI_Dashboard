@@ -6,7 +6,7 @@ import psutil
 
 from fastapi import APIRouter, BackgroundTasks
 
-from services.systemService import (
+from backend.services.system_service import (
     format_uptime,
     get_cpu_temperature,
     get_ip_address,

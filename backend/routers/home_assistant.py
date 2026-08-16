@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from services.home_assistantService import check_home_assistant_status
+from backend.services.home_assistant_service import check_home_assistant_status
 
 
 router = APIRouter(
