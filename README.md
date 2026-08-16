@@ -6,6 +6,24 @@ The project is both a practical everyday tool and a long-term portfolio project.
 
 > **Project status:** Active development. The main React/FastAPI foundation and several integrations are already working; the interface and deployment process are still being improved.
 
+## Screenshots
+
+### Connected applications
+
+![Applications overview](docs/screenshots/applications.png)
+
+### Raspberry Pi monitoring
+
+![System information and live monitoring](docs/screenshots/system.png)
+
+### Weather dashboard
+
+![Current weather and forecast](docs/screenshots/weather_app.png)
+
+### Protected system controls
+
+![Restart confirmation dialog](docs/screenshots/safety_confirmation.png)
+
 ## Features
 
 ### Implemented
@@ -26,11 +44,13 @@ The project is both a practical everyday tool and a long-term portfolio project.
 - GitHub repository overview
 - Independent loading, online, offline, and error states for integrations
 - Responsive dark interface built from reusable React pages and components
+- Touchscreen-focused navigation and kiosk mode
+- Configurable refresh intervals, temperature warning limit, and weather location
+- Confirmation dialogs for critical Raspberry Pi controls
 
 ### Planned
 
-- UI polish and project screenshots
-- Touchscreen-focused navigation and kiosk mode
+- Further UI polish and a short demonstration video
 - Bambu Lab camera and model preview
 - Additional Spotify controls such as volume and repeat
 - More Home Assistant entities and controls
@@ -77,25 +97,48 @@ The project currently follows this general structure:
 
 ```text
 Personal_PI_Dashboard/
-├── backend/
-│   ├── main.py
-│   ├── config.py
-│   ├── requirements.txt
-│   └── .env
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   └── App.jsx
-│   └── package.json
-├── docs/
-│   └── architecture.md
-├── .gitignore
-└── README.md
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ routers/
+â”‚   â”‚   â”œâ”€â”€ bambu.py
+â”‚   â”‚   â”œâ”€â”€ github.py
+â”‚   â”‚   â”œâ”€â”€ home_assistant.py
+â”‚   â”‚   â”œâ”€â”€ spotify.py
+â”‚   â”‚   â”œâ”€â”€ system.py
+â”‚   â”‚   â””â”€â”€ weather.py
+â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”œâ”€â”€ bambu_service.py
+â”‚   â”‚   â”œâ”€â”€ github_service.py
+â”‚   â”‚   â”œâ”€â”€ home_assistant_service.py
+â”‚   â”‚   â”œâ”€â”€ spotify_service.py
+â”‚   â”‚   â”œâ”€â”€ system_service.py
+â”‚   â”‚   â””â”€â”€ weather_service.py
+â”‚   â”œâ”€â”€ main.py
+â”‚   â”œâ”€â”€ config.py
+â”‚   â”œâ”€â”€ requirements.txt
+â”‚   â””â”€â”€ .env.example
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”œâ”€â”€ context/
+â”‚   â”‚   â”œâ”€â”€ data/
+â”‚   â”‚   â”œâ”€â”€ hooks/
+â”‚   â”‚   â”œâ”€â”€ pages/
+â”‚   â”‚   â”œâ”€â”€ utils/
+â”‚   â”‚   â””â”€â”€ App.jsx
+â”‚   â””â”€â”€ package.json
+â”œâ”€â”€ docs/
+â”‚   â”œâ”€â”€ screenshots/
+â”‚   â”‚   â”œâ”€â”€ applications.png
+â”‚   â”‚   â”œâ”€â”€ safety_confirmation.png
+â”‚   â”‚   â”œâ”€â”€ system.png
+â”‚   â”‚   â””â”€â”€ weather_app.png
+â”‚   â””â”€â”€ architecture.md
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ LICENSE
+â””â”€â”€ README.md
 ```
 
-The backend is currently kept in one main application file while the integrations are developed. It can be separated into routers and service modules as the project grows.
+The FastAPI backend is separated into thin API routers and service modules. Routers define the HTTP endpoints, while services contain integration and system logic. The React frontend follows the same modular approach with reusable components, hooks, contexts, and page-level views.
 
 ## Requirements
 
@@ -211,14 +254,14 @@ The frontend distinguishes between:
 
 ## Roadmap
 
-1. Finish and polish the Bambu Lab page.
-2. Improve the visual consistency of all pages.
-3. Add screenshots and a short demonstration to the repository.
-4. Complete Spotify controls and presentation.
-5. Improve touchscreen navigation and responsive behavior.
-6. Add production frontend serving and automatic kiosk startup.
-7. Split the FastAPI backend into routers and integration services.
-8. Add selected new modules such as finance, projects, MQTT devices, or persistent settings.
+1. Continue polishing the Bambu Lab page and add camera or model previews.
+2. Complete the remaining Spotify controls and presentation.
+3. Improve visual consistency and responsive behavior across all pages.
+4. Add a short demonstration video or GIF to the repository.
+5. Add production frontend serving and automatic kiosk startup.
+6. Add backend tests and automated GitHub checks.
+7. Add Docker Compose deployment for the complete dashboard.
+8. Add selected modules such as finance, MQTT devices, or persistent settings.
 
 The roadmap is intentionally flexible. The dashboard is developed progressively, and every step should produce a useful improvement rather than only prepare for distant features.
 
