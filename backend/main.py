@@ -1,17 +1,3 @@
-import platform
-import socket
-import subprocess
-import time
-import json
-import re
-import psutil
-import httpx
-import os
-import asyncio
-import requests
-import secrets
-
-
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,24 +32,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-        
-def parse_number(value: str) -> float | None:
-    """Convert a Home Assistant state to a number when possible"""
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return None
     
-
-
-
 """API GET"""
 @app.get("/")
 def read_root():
     return {
         "message": "Personal Pi Dashboard backend is running",
     }
-
 
 app.include_router(github_router)
 app.include_router(spotify_router)
