@@ -97,45 +97,45 @@ The project currently follows this general structure:
 
 ```text
 Personal_PI_Dashboard/
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ routers/
-â”‚   â”‚   â”œâ”€â”€ bambu.py
-â”‚   â”‚   â”œâ”€â”€ github.py
-â”‚   â”‚   â”œâ”€â”€ home_assistant.py
-â”‚   â”‚   â”œâ”€â”€ spotify.py
-â”‚   â”‚   â”œâ”€â”€ system.py
-â”‚   â”‚   â””â”€â”€ weather.py
-â”‚   â”œâ”€â”€ services/
-â”‚   â”‚   â”œâ”€â”€ bambu_service.py
-â”‚   â”‚   â”œâ”€â”€ github_service.py
-â”‚   â”‚   â”œâ”€â”€ home_assistant_service.py
-â”‚   â”‚   â”œâ”€â”€ spotify_service.py
-â”‚   â”‚   â”œâ”€â”€ system_service.py
-â”‚   â”‚   â””â”€â”€ weather_service.py
-â”‚   â”œâ”€â”€ main.py
-â”‚   â”œâ”€â”€ config.py
-â”‚   â”œâ”€â”€ requirements.txt
-â”‚   â””â”€â”€ .env.example
-â”œâ”€â”€ frontend/
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ components/
-â”‚   â”‚   â”œâ”€â”€ context/
-â”‚   â”‚   â”œâ”€â”€ data/
-â”‚   â”‚   â”œâ”€â”€ hooks/
-â”‚   â”‚   â”œâ”€â”€ pages/
-â”‚   â”‚   â”œâ”€â”€ utils/
-â”‚   â”‚   â””â”€â”€ App.jsx
-â”‚   â””â”€â”€ package.json
-â”œâ”€â”€ docs/
-â”‚   â”œâ”€â”€ screenshots/
-â”‚   â”‚   â”œâ”€â”€ applications.png
-â”‚   â”‚   â”œâ”€â”€ safety_confirmation.png
-â”‚   â”‚   â”œâ”€â”€ system.png
-â”‚   â”‚   â””â”€â”€ weather_app.png
-â”‚   â””â”€â”€ architecture.md
-â”œâ”€â”€ .gitignore
-â”œâ”€â”€ LICENSE
-â””â”€â”€ README.md
+├── backend/
+│   ├── routers/
+│   │   ├── bambu.py
+│   │   ├── github.py
+│   │   ├── home_assistant.py
+│   │   ├── spotify.py
+│   │   ├── system.py
+│   │   └── weather.py
+│   ├── services/
+│   │   ├── bambu_service.py
+│   │   ├── github_service.py
+│   │   ├── home_assistant_service.py
+│   │   ├── spotify_service.py
+│   │   ├── system_service.py
+│   │   └── weather_service.py
+│   ├── main.py
+│   ├── config.py
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── data/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   └── App.jsx
+│   └── package.json
+├── docs/
+│   ├── screenshots/
+│   │   ├── applications.png
+│   │   ├── safety_confirmation.png
+│   │   ├── system.png
+│   │   └── weather_app.png
+│   └── architecture.md
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
 The FastAPI backend is separated into thin API routers and service modules. Routers define the HTTP endpoints, while services contain integration and system logic. The React frontend follows the same modular approach with reusable components, hooks, contexts, and page-level views.
