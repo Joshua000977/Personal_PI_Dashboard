@@ -86,7 +86,7 @@ function BambuPage() {
               amsDetails={bambuStatus.ams}
               externalSpoolDetails={bambuStatus.external_spool}
             />
-            <BambuPrintDetails printDetails={bambuStatus} />
+            <BambuPrintDetails printerStatus={bambuStatus} />
             <BambuFans fanDetails={bambuStatus.fans} />
             <BambuControls
               controlDetails={bambuStatus.controls}
