@@ -64,7 +64,7 @@ from config import (
     BAMBU_STOP_ENTITY,
 )
 
-from backend.services.home_assistant_service import (
+from services.home_assistant_service import (
     call_home_assistant_service,
     get_home_assistant_entity,
 )

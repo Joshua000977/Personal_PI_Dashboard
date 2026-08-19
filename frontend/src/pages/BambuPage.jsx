@@ -25,7 +25,7 @@ function BambuPage() {
   let connectionDescription = "Checking the Bambu printer connection...";
   let indicatorState = "checking";
 
-  if (bambuLoading) {
+  if (bambuLoading) {                                                            
     connectionText = "Checking";
     connectionDescription = "Checking the Bambu printer connection...";
     indicatorState = "checking";

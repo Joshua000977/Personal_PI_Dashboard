@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 from urllib import parse
 
-from backend.services.spotify_service import (
+from services.spotify_service import (
     get_spotify_access_token,
     save_spotify_tokens,
     send_spotify_player_command,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from backend.services import bambu_service
+from services import bambu_service
 
 router = APIRouter(
     prefix="/api/home-assistant/bambu-printer",

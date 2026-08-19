@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from backend.services.github_service import fetch_github_repositories
+from services.github_service import fetch_github_repositories
 
 router = APIRouter(
     prefix="/api/github",
