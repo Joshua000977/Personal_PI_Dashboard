@@ -2,6 +2,24 @@ import { useSettings } from "../context/SettingsContext";
 
 import "./SettingsPage.css";
 
+const THEME_OPTIONS = [
+  {
+    description: "A focused dark interface with restrained blue accents.",
+    label: "Graphite",
+    value: "dark",
+  },
+  {
+    description: "A clean bright interface for daylight and desk use.",
+    label: "Light",
+    value: "light",
+  },
+  {
+    description: "Follows the light or dark preference of the device.",
+    label: "System",
+    value: "system",
+  },
+];
+
 const SYSTEM_REFRESH_OPTIONS = [
   {
     label: "3 seconds",
@@ -47,6 +65,10 @@ function SettingsPage() {
     updateSetting("systemRefreshInterval", Number(event.target.value));
   }
 
+  function handleThemeChange(event) {
+    updateSetting("theme", event.target.value);
+  }
+
   function handleStorageRefreshChange(event) {
     updateSetting("storageRefreshInterval", Number(event.target.value));
   }
@@ -76,6 +98,60 @@ function SettingsPage() {
           automatically.
         </p>
       </header>
+
+      <section className="settings-section">
+        <div className="settings-section__heading">
+          <div>
+            <h2>Appearance</h2>
+
+            <p>
+              Choose the dashboard theme. The selection applies immediately
+              and is remembered on this device.
+            </p>
+          </div>
+
+          <span className="settings-section__icon">UI</span>
+        </div>
+
+        <fieldset className="theme-picker">
+          <legend className="visually-hidden">Dashboard theme</legend>
+
+          {THEME_OPTIONS.map((option) => (
+            <label
+              className={`theme-option${
+                settings.theme === option.value ? " theme-option--selected" : ""
+              }`}
+              key={option.value}
+            >
+              <input
+                checked={settings.theme === option.value}
+                name="dashboard-theme"
+                onChange={handleThemeChange}
+                type="radio"
+                value={option.value}
+              />
+
+              <span
+                aria-hidden="true"
+                className={`theme-option__preview theme-option__preview--${option.value}`}
+              >
+                <span />
+                <span />
+                <span />
+              </span>
+
+              <span className="theme-option__copy">
+                <strong>{option.label}</strong>
+                <small>{option.description}</small>
+              </span>
+
+              <span aria-hidden="true" className="theme-option__check">
+                ✓
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      </section>
 
       <section className="settings-section">
         <div className="settings-section__heading">

@@ -6,8 +6,8 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #f6f7fb;
-  background: #090b13;
+  color: var(--color-text-primary);
+  background: var(--color-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -26,6 +26,8 @@ body,
 
 body {
   min-height: 100vh;
+  color: var(--color-text-primary);
+  background: var(--color-canvas);
 }
 
 button,
@@ -37,6 +39,11 @@ textarea {
 
 a {
   color: inherit;
+}
+
+::selection {
+  color: var(--color-text-on-accent);
+  background: var(--color-accent-strong);
 }
 
 /* Touchscreen behaviour */

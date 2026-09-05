@@ -2,19 +2,14 @@
   min-width: 0;
   padding: 20px;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   border-radius: 18px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(35, 27, 54, 0.94),
-      rgba(18, 18, 31, 0.94)
-    );
+  background: var(--gradient-card);
 
   box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    var(--shadow-card),
+    inset 0 1px 0 var(--color-border-subtle);
 
   transition:
     border-color 180ms ease,
@@ -31,7 +26,7 @@
 }
 
 .stat-card-title {
-  color: #a49daf;
+  color: var(--color-text-secondary);
 
   font-size: 13px;
   font-weight: 600;
@@ -45,11 +40,11 @@
 
   padding: 0 9px;
 
-  border: 1px solid rgba(170, 104, 255, 0.2);
+  border: 1px solid var(--color-accent-border);
   border-radius: 13px;
 
-  color: #d9c8ff;
-  background: rgba(148, 83, 240, 0.13);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
 
   font-size: 10px;
   font-weight: 800;
@@ -63,7 +58,7 @@
 .stat-card-value {
   margin: 0 0 6px;
 
-  color: #f7f4fb;
+  color: var(--color-text-primary);
 
   font-size: 29px;
   font-weight: 750;
@@ -75,7 +70,7 @@
 .stat-card-detail {
   margin: 0 0 17px;
 
-  color: #777184;
+  color: var(--color-text-muted);
 
   font-size: 12px;
 }
@@ -87,7 +82,7 @@
   overflow: hidden;
 
   border-radius: 999px;
-  background: #292536;
+  background: var(--color-surface-raised);
 }
 
 .stat-card-progress-fill {
@@ -98,12 +93,12 @@
   background:
     linear-gradient(
       90deg,
-      #7559ee,
-      #aa5de8
+      var(--color-accent-strong),
+      var(--color-accent)
     );
 
   box-shadow:
-    0 0 12px rgba(156, 86, 240, 0.38);
+    0 0 12px var(--color-accent-border-strong);
 
   transition:
     width 300ms ease,
@@ -114,148 +109,94 @@
 /* Healthy temperature */
 
 .stat-card--healthy {
-  border-color: rgba(104, 216, 131, 0.45);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(44, 112, 61, 0.34),
-      rgba(18, 54, 29, 0.24)
-    );
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.22),
-    0 10px 28px rgba(39, 124, 59, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  border-color: var(--color-success-border);
+  background: var(--color-success-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .stat-card--healthy .stat-card-title {
-  color: #9dccaa;
+  color: var(--color-success-text);
 }
 
 .stat-card--healthy .stat-card-icon {
-  border-color: rgba(104, 216, 131, 0.32);
-
-  color: #bdebc4;
-  background: rgba(44, 112, 61, 0.27);
+  border-color: var(--color-success-border);
+  color: var(--color-success-text);
+  background: var(--color-success-surface);
 }
 
 .stat-card--healthy .stat-card-value {
-  color: #cef4d4;
+  color: var(--color-text-primary);
 }
 
 .stat-card--healthy .stat-card-detail {
-  color: #8eb798;
+  color: var(--color-success-text);
 }
 
 .stat-card--healthy .stat-card-progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      #47b864,
-      #75dc8d
-    );
-
-  box-shadow:
-    0 0 12px rgba(71, 184, 100, 0.4);
+  background: var(--color-success);
+  box-shadow: 0 0 12px var(--color-success-border);
 }
 
 /* Warm temperature */
 
 .stat-card--warning {
-  border-color: rgba(255, 184, 92, 0.52);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(149, 91, 27, 0.32),
-      rgba(75, 45, 18, 0.2)
-    );
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.22),
-    0 10px 28px rgba(149, 91, 27, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  border-color: var(--color-warning-border);
+  background: var(--color-warning-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .stat-card--warning .stat-card-title {
-  color: #dbb67f;
+  color: var(--color-warning-text);
 }
 
 .stat-card--warning .stat-card-icon {
-  border-color: rgba(255, 184, 92, 0.34);
-
-  color: #ffd28e;
-  background: rgba(149, 91, 27, 0.26);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
+  background: var(--color-warning-surface);
 }
 
 .stat-card--warning .stat-card-value {
-  color: #ffd9a2;
+  color: var(--color-text-primary);
 }
 
 .stat-card--warning .stat-card-detail {
-  color: #c6a474;
+  color: var(--color-warning-text);
 }
 
 .stat-card--warning .stat-card-progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      #d98931,
-      #ffbc63
-    );
-
-  box-shadow:
-    0 0 12px rgba(255, 184, 92, 0.4);
+  background: var(--color-warning);
+  box-shadow: 0 0 12px var(--color-warning-border);
 }
 
 /* Critical temperature */
 
 .stat-card--critical {
-  border-color: rgba(255, 103, 127, 0.58);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(143, 42, 62, 0.36),
-      rgba(77, 24, 38, 0.22)
-    );
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.22),
-    0 10px 28px rgba(117, 28, 48, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .stat-card--critical .stat-card-title {
-  color: #d68f9a;
+  color: var(--color-danger-text);
 }
 
 .stat-card--critical .stat-card-icon {
-  border-color: rgba(255, 103, 127, 0.36);
-
-  color: #ffadb9;
-  background: rgba(143, 42, 62, 0.28);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger-text);
+  background: var(--color-danger-surface);
 }
 
 .stat-card--critical .stat-card-value {
-  color: #ffc0ca;
+  color: var(--color-text-primary);
 }
 
 .stat-card--critical .stat-card-detail {
-  color: #cf8b96;
+  color: var(--color-danger-text);
 }
 
 .stat-card--critical .stat-card-progress-fill {
-  background:
-    linear-gradient(
-      90deg,
-      #d94a63,
-      #ff768c
-    );
-
-  box-shadow:
-    0 0 12px rgba(255, 103, 127, 0.42);
+  background: var(--color-danger);
+  box-shadow: 0 0 12px var(--color-danger-border);
 }
 
 /* Raspberry Pi 7-inch landscape display */

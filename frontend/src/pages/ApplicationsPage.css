@@ -9,7 +9,7 @@
   
   .applications-page__eyebrow {
     margin: 0 0 6px;
-    color: #b79cff;
+    color: var(--color-accent);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -22,7 +22,7 @@
   
   .applications-page__header p:last-child {
     margin-top: 10px;
-    color: #aaa4be;
+    color: var(--color-text-secondary);
   }
   
   .applications-grid {
