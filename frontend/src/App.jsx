@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useRef } from "react";
+import { useId, useRef } from "react";
 
 import Sidebar from "./components/Sidebar";
 import DashboardPage from "./pages/DashboardPage";
@@ -16,16 +16,18 @@ import BambuPage from "./pages/BambuPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import SpotifyPage from "./pages/SpotifyPage";
 import Screensaver from "./components/Screensaver";
+import useIdleTimer from "./hooks/useIdleTimer";
 
 function App() {
   const pageContentRef = useRef(null);
+  const isIdle = useIdleTimer(10000);
 
   useTouchScroll(pageContentRef);
   return (
     <BrowserRouter>
       <div className="app-shell">
         <Sidebar />
-        <Screensaver />
+        {isIdle && <Screensaver />}
 
         <main ref={pageContentRef} className="page-content">
           <Routes>
