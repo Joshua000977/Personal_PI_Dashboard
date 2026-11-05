@@ -2,6 +2,8 @@ import json
 import time
 
 import requests
+import math
+from threading import Lock
 
 from config import (
     BACKEND_DIRECTORY,
@@ -11,6 +13,62 @@ from config import (
 
 
 SPOTIFY_TOKEN_FILE = BACKEND_DIRECTORY / ".spotify_tokens.json"
+SPOTIFY_PLAYBACK_CACHE_SECONDS = 10
+
+_playback_lock = Lock()
+_playback_response = None
+_playback_cache_until = 0.0
+_spotify_retry_until = 0.0
+
+
+def get_spotify_playback_response(access_token: str):
+    """Share playback requests and respect Spotify's retry cooldown."""
+    global _playback_response
+    global _playback_cache_until
+    global _spotify_retry_until
+
+    with _playback_lock:
+        now = time.monotonic()
+
+        # During a cooldown, return the previous 429 without contacting Spotify.
+        if now < _spotify_retry_until:
+            remaining = math.ceil(_spotify_retry_until - now)
+            return _playback_response, remaining
+
+        # All frontend callers share this cached response.
+        if _playback_response is not None and now < _playback_cache_until:
+            return _playback_response, 0
+
+        response = requests.get(
+            "https://api.spotify.com/v1/me/player",
+            headers={"Authorization": f"Bearer {access_token}"},
+            timeout=10,
+        )
+
+        _playback_response = response
+        now = time.monotonic()
+
+        if response.status_code == 429:
+            try:
+                retry_seconds = max(
+                    1,
+                    math.ceil(float(response.headers.get("Retry-After", "60"))),
+                )
+            except (ValueError, OverflowError):
+                retry_seconds = 60
+
+            _spotify_retry_until = now + retry_seconds
+
+            print(
+                f"Spotify rate limited: waiting {retry_seconds} seconds"
+            )
+
+            return response, retry_seconds
+
+        _spotify_retry_until = 0.0
+        _playback_cache_until = now + SPOTIFY_PLAYBACK_CACHE_SECONDS
+
+        return response, 0
 
 spotify_auth_states: set[str] = set()
 def save_spotify_tokens(token_data: dict) -> None:

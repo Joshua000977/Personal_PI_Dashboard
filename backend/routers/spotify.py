@@ -10,6 +10,7 @@ from services.spotify_service import (
     get_spotify_access_token,
     save_spotify_tokens,
     send_spotify_player_command,
+    get_spotify_playback_response,
 )
 from config import (
     SPOTIFY_CLIENT_ID,
@@ -100,7 +101,7 @@ def spotify_callback(
         auth=(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET),
         timeout=10,
     )
-
+    
     if response.status_code != 200:
         return {
             "authenticated": False,
@@ -129,13 +130,7 @@ def get_spotify_status():
         }
 
     try:
-        response = requests.get(
-            "https://api.spotify.com/v1/me/player",
-            headers={
-                "Authorization": f"Bearer {access_token}",
-            },
-            timeout=10,
-        )
+        response, retry_after = get_spotify_playback_response(access_token)
     except requests.RequestException:
         return {
             "available": False,
@@ -144,6 +139,16 @@ def get_spotify_status():
             "error": "Spotify could not be reached",
         }
 
+
+    if response.status_code == 429:
+        return {
+            "available": False,
+            "authenticated": True,
+            "is_playing": False,
+            "error": "Spotify request limit reached. Waiting before retrying.",
+            "spotify_status": 429,
+            "retry_after_seconds": retry_after,
+        }
     # Spotify returns 204 when no device or playback session is active.
     if response.status_code == 204:
         return {
