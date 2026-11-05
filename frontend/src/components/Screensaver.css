@@ -1,0 +1,15 @@
+.screensaver {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #101018;
+    color: white;
+  
+    display: grid;
+    place-items: center;
+  }
+  
+  .screensaver h1 {
+    margin: 0;
+    font-size: 100px;
+  }

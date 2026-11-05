@@ -15,6 +15,7 @@ import HomeAssistantPage from "./pages/HomeAssistantPage";
 import BambuPage from "./pages/BambuPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import SpotifyPage from "./pages/SpotifyPage";
+import Screensaver from "./components/Screensaver";
 
 function App() {
   const pageContentRef = useRef(null);
@@ -24,6 +25,7 @@ function App() {
     <BrowserRouter>
       <div className="app-shell">
         <Sidebar />
+        <Screensaver />
 
         <main ref={pageContentRef} className="page-content">
           <Routes>
