@@ -57,6 +57,14 @@ const STORAGE_REFRESH_OPTIONS = [
     value: 60000,
   },
 ];
+const SCREENSAVER_TIME_OPTIONS = [
+  { label: "30 seconds", value: 30000 },
+  { label: "1 minute", value: 60000 },
+  { label: "2 minutes", value: 120000 },
+  { label: "3 minutes", value: 180000 },
+  { label: "5 minutes", value: 300000 },
+  { label: "10 minutes", value: 600000 },
+];
 
 function SettingsPage() {
   const { settings, updateSetting, resetSettings } = useSettings();
@@ -78,7 +86,12 @@ function SettingsPage() {
 
     updateSetting("temperatureWarningLimit", newLimit);
   }
- 
+  function handleScreensaverTimeChange(event) {
+    const newLimit = Number(event.target.value);
+
+    updateSetting("screensaver", newLimit);
+  }
+
   function handleWeatherLocationModeChange(event) {
     updateSetting("weatherLocationMode", event.target.value);
   }
@@ -105,8 +118,8 @@ function SettingsPage() {
             <h2>Appearance</h2>
 
             <p>
-              Choose the dashboard theme. The selection applies immediately
-              and is remembered on this device.
+              Choose the dashboard theme. The selection applies immediately and
+              is remembered on this device.
             </p>
           </div>
 
@@ -307,6 +320,35 @@ function SettingsPage() {
               onChange={handleWeatherLocationNameChange}
               placeholder="Straßburg, Kärnten, AT"
             />
+          </label>
+        </div>
+      </section>
+      <section className="settings-section">
+        <div className="settings-section__heading">
+          <div>
+            <h2>Screensaver</h2>
+            <p>Choose when the screensaver appears after inactivity.</p>
+          </div>
+        </div>
+
+        <div className="settings-list">
+          <label className="setting-row" htmlFor="screensaver-timeout">
+            <span className="setting-row__text">
+              <strong>Inactivity timeout</strong>
+              <small>Touch the screen to return to the dashboard.</small>
+            </span>
+
+            <select
+              id="screensaver-timeout"
+              value={settings.screensaver}
+              onChange={handleScreensaverTimeChange}
+            >
+              {SCREENSAVER_TIME_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
       </section>

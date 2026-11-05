@@ -17,10 +17,12 @@ import ProjectsPage from "./pages/ProjectsPage";
 import SpotifyPage from "./pages/SpotifyPage";
 import Screensaver from "./components/Screensaver";
 import useIdleTimer from "./hooks/useIdleTimer";
+import { useSettings } from "./context/SettingsContext";
 
 function App() {
   const pageContentRef = useRef(null);
-  const isIdle = useIdleTimer(10000);
+  const { settings } = useSettings();
+  const isIdle = useIdleTimer(settings.screensaver);
 
   useTouchScroll(pageContentRef);
   return (
@@ -40,7 +42,7 @@ function App() {
             />
             <Route path="/applications/bambu-printer" element={<BambuPage />} />
             <Route path="/applications/project" element={<ProjectsPage />} />
-            <Route path="/applications/spotify" element={<SpotifyPage/>} />
+            <Route path="/applications/spotify" element={<SpotifyPage />} />
             <Route
               path="/applications/:applicationId"
               element={<ApplicationDetailPage />}
